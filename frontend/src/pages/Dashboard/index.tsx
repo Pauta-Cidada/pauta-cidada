@@ -1,6 +1,22 @@
 import { PageLayout } from '@/components/Layout';
 import NewsCard from './components/NewsCard';
 import type { NewsCardProps } from './components/NewsCard';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { newsSchema, type NewsSchemaDto } from './schemas/news.schema';
+import { useCallback } from 'react';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import UfSelector from '@/components/UfSelector';
+import NewsTypeSelector from '@/components/NewsTypeSelector';
 
 const newsData: NewsCardProps[] = [
   {
@@ -87,8 +103,96 @@ const newsData: NewsCardProps[] = [
 ];
 
 export default function Dashboard() {
+  const form = useForm<NewsSchemaDto>({
+    resolver: zodResolver(newsSchema),
+    defaultValues: {
+      keywords: '',
+      uf: undefined,
+      type: undefined,
+    },
+  });
+
+  const handleSubmit = useCallback((data: NewsSchemaDto) => {
+    console.log('Form submitted with data:', data);
+  }, []);
+
   return (
     <PageLayout className="text-white">
+      <div className="w-full flex flex-col items-center gap-6 mb-8">
+        <h1 className="text-2xl font-semibold">
+          Sobre o que você gostaria de ler hoje?
+        </h1>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="w-full max-w-2xl space-y-6"
+          >
+            <div className="flex flex-col gap-4 ">
+              <FormField
+                control={form.control}
+                name="keywords"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Tema da busca</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Exemplo: segurança pública"
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="w-full flex justify-end">
+                <div className="flex gap-3">
+                  <FormField
+                    control={form.control}
+                    name="uf"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Estado (UF)</FormLabel>
+                        <FormControl>
+                          <UfSelector
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="Selecione o estado"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Tipo da ementa</FormLabel>
+                        <FormControl>
+                          <NewsTypeSelector
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="Selecione o tipo"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+
+      <Separator />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {newsData.map((news) => (
           <NewsCard key={news.number} {...news} />

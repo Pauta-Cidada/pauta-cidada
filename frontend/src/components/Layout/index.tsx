@@ -26,7 +26,7 @@ interface PageLayoutProps
 
 function PageLayout({ children, className, ...props }: PageLayoutProps) {
   return (
-    <div className={cn('', className)} {...props}>
+    <div className={cn('space-y-6', className)} {...props}>
       {children}
     </div>
   );
