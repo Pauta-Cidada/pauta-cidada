@@ -14,7 +14,7 @@ services:
       - ${PORT}:${PORT}
     networks:
       - pauta-cidada-network
-    command: npm start:dev
+    command: npm run start:dev
     depends_on:
       - database
     volumes:
@@ -23,7 +23,7 @@ services:
 
   database:
     container_name: pauta-cidada-database
-    image: postgres
+    image: pgvector/pgvector:pg18
     restart: unless-stopped
     env_file: .env
     ports:
@@ -32,6 +32,9 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - pauta-cidada-network
   

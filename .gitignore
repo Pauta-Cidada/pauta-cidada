@@ -7,3 +7,6 @@ docker-compose.debug.yml
 *.lock
 *lock.json
 temp
+
+# PostgreSQL data directory
+postgres_data/
