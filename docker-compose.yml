@@ -14,7 +14,7 @@ services:
       - ${PORT}:${PORT}
     networks:
       - pauta-cidada-network
-    command: yarn start:dev
+    command: npm start:dev
     depends_on:
       - database
     volumes:
