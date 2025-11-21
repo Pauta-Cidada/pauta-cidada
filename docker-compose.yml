@@ -1,0 +1,56 @@
+networks:
+  pauta-cidada-network:
+    driver: bridge
+
+services:
+  backend:
+    container_name: pauta-cidada-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - pauta-cidada-network
+    command: npm run start:dev
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/app
+      - ./backend/node_modules:/app/node_modules
+
+  database:
+    container_name: pauta-cidada-database
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - ${DB_EXTERNAL_PORT}:5432
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - pauta-cidada-network
+  
+  frontend:
+    container_name: pauta-cidada-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - 5173:5173
+    networks:
+      - pauta-cidada-network
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - ./frontend/node_modules:/app/node_modules
+    

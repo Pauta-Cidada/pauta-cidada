@@ -1,0 +1,12 @@
+.env
+
+# Custom
+docker-compose.debug.yml
+.vscode
+.~lock.*
+*.lock
+*lock.json
+temp
+
+# PostgreSQL data directory
+postgres_data/
