@@ -10,7 +10,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    env_file: .env
+    # env_file: .env
     restart: unless-stopped
     ports:
       - ${PORT}:${PORT}
@@ -27,7 +27,7 @@ services:
     container_name: pauta-cidada-database
     image: pgvector/pgvector:pg18
     restart: unless-stopped
-    env_file: .env
+    # env_file: .env
     ports:
       - ${DB_EXTERNAL_PORT}:5432
     environment:
@@ -45,7 +45,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    env_file: .env
+    # env_file: .env
     restart: unless-stopped
     networks:
       - pauta-cidada-network
