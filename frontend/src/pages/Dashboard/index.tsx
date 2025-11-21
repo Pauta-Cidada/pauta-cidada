@@ -10,13 +10,12 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
 import UfSelector from '@/components/UfSelector';
 import NewsTypeSelector from '@/components/NewsTypeSelector';
+import { Search } from 'lucide-react';
 
 const newsData: NewsCardProps[] = [
   {
@@ -118,48 +117,55 @@ export default function Dashboard() {
 
   return (
     <PageLayout className="text-white">
-      <div className="w-full flex flex-col items-center gap-6 mb-8">
-        <h1 className="text-2xl font-semibold">
-          Sobre o que você gostaria de ler hoje?
-        </h1>
+      <div className="w-full flex flex-col items-center gap-10 mb-16 mt-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+            Sobre o que você gostaria de ler hoje?
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Explore as últimas propostas e leis em tramitação
+          </p>
+        </div>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="w-full max-w-2xl space-y-6"
+            className="w-full max-w-3xl space-y-8"
           >
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-6">
               <FormField
                 control={form.control}
                 name="keywords"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Tema da busca</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Exemplo: segurança pública"
-                        {...field}
-                        className="w-full"
-                      />
+                      <div className="relative group">
+                        <Input
+                          placeholder="Pesquise por temas, palavras-chave ou números..."
+                          {...field}
+                          className="w-full pl-14 h-14 text-lg shadow-xl border-white/10 bg-white/5 hover:bg-white/10 transition-all"
+                        />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 size-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className="w-full flex justify-end">
-                <div className="flex gap-3">
+              <div className="w-full flex justify-center">
+                <div className="flex flex-wrap justify-center gap-4 w-full max-w-2xl">
                   <FormField
                     control={form.control}
                     name="uf"
                     render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>Estado (UF)</FormLabel>
+                      <FormItem className="min-w-[200px]">
                         <FormControl>
                           <UfSelector
                             value={field.value}
                             onChange={field.onChange}
-                            placeholder="Selecione o estado"
+                            placeholder="Filtrar por Estado"
+                            className="w-full h-10"
                           />
                         </FormControl>
                         <FormMessage />
@@ -171,13 +177,13 @@ export default function Dashboard() {
                     control={form.control}
                     name="type"
                     render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>Tipo da ementa</FormLabel>
+                      <FormItem className="min-w-[200px]">
                         <FormControl>
                           <NewsTypeSelector
                             value={field.value}
                             onChange={field.onChange}
-                            placeholder="Selecione o tipo"
+                            placeholder="Filtrar por Tipo"
+                            className="w-full h-10"
                           />
                         </FormControl>
                         <FormMessage />
@@ -191,9 +197,7 @@ export default function Dashboard() {
         </Form>
       </div>
 
-      <Separator />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
         {newsData.map((news) => (
           <NewsCard key={news.number} {...news} />
         ))}

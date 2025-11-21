@@ -71,7 +71,10 @@ export default function UfSelector({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn('w-[200px] justify-between', className)}
+          className={cn(
+            'w-[200px] justify-between hover:text-white',
+            className,
+          )}
         >
           {value
             ? UF_OPTIONS.find((uf) => uf.value === value)?.label

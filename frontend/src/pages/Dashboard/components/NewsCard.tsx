@@ -8,6 +8,7 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
+import { Hash, Calendar } from 'lucide-react';
 
 export interface NewsCardProps {
   number: string | number;
@@ -27,19 +28,25 @@ export default function NewsCard({
   title = 'Título gerado pelo modelo para a notícia',
 }: NewsCardProps) {
   return (
-    <Card className="w-full max-w-lg hover:cursor-pointer">
+    <Card className="w-full max-w-lg hover:cursor-pointer group dark border-white/10 bg-card/50 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <div className="flex flex-col gap-1">
-          <CardDescription>Número: {number}</CardDescription>
-          <CardDescription>
-            Data de apresentação: {presentationDate}
+        <CardTitle className="group-hover:text-purple-400 transition-colors">
+          {title}
+        </CardTitle>
+        <div className="flex flex-col gap-2 mt-2">
+          <CardDescription className="flex items-center gap-2">
+            <Hash className="size-3.5" />
+            <span>Número: {number}</span>
+          </CardDescription>
+          <CardDescription className="flex items-center gap-2">
+            <Calendar className="size-3.5" />
+            <span>Data de apresentação: {presentationDate}</span>
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-6">
-          <p className="text-gray-800">{description}</p>
+          <p className="text-muted-foreground leading-relaxed">{description}</p>
         </div>
       </CardContent>
       <CardFooter className="flex w-full justify-end gap-3">

@@ -46,7 +46,10 @@ export default function NewsTypeSelector({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn('w-[280px] justify-between', className)}
+          className={cn(
+            'w-[280px] justify-between hover:text-white',
+            className,
+          )}
         >
           {value
             ? TYPE_OPTIONS.find((type) => type.value === value)?.label
