@@ -1,7 +1,8 @@
 FROM python:3.13-slim-bookworm
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-        build-essential && \
+    build-essential \
+    curl && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ADD https://astral.sh/uv/install.sh /install.sh
@@ -16,9 +17,10 @@ COPY . .
 
 RUN uv sync
 
-ENV PATH="/app/.venv/bin:{$PATH}"
+# Add src to PYTHONPATH so imports work correctly
+ENV PYTHONPATH="/app/src:${PYTHONPATH}"
 
 # Expose the specified port for FastAPI
-EXPOSE $PORT
+EXPOSE 80
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]

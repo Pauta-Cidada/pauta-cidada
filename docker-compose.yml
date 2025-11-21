@@ -4,9 +4,9 @@ networks:
 
 services:
   backend:
-    container_name: pauta-cidada-backend
+    container_name: pauta-cidada-backend-node
     build:
-      context: ./backend
+      context: ./backend-node
       dockerfile: Dockerfile
     env_file: .env
     restart: unless-stopped
@@ -18,8 +18,8 @@ services:
     depends_on:
       - database
     volumes:
-      - ./backend:/app
-      - ./backend/node_modules:/app/node_modules
+      - ./backend-node:/app
+      - ./backend-node/node_modules:/app/node_modules
 
   database:
     container_name: pauta-cidada-database
@@ -53,4 +53,22 @@ services:
     volumes:
       - ./frontend:/app
       - ./frontend/node_modules:/app/node_modules
-    
+
+  backend-python:
+    container_name: pauta-cidada-backend-python
+    build:
+      context: ./backend-python
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - ${PYTHON_BACKEND_PORT}:80
+    networks:
+      - pauta-cidada-network
+    depends_on:
+      - database
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+    volumes:
+      - ./backend-python:/app
