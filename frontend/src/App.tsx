@@ -1,11 +1,16 @@
-import { Button } from './components/ui/button';
+import { BrowserRouter } from 'react-router';
+import { Toaster } from '@/components/ui/sonner';
+import { CopyProvider } from './context/CopyContext';
+import AppRoutes from './routes';
 
 function App() {
   return (
-    <div>
-      <h1 className="text-red-500">Hello World</h1>
-      <Button>Tudo bem?</Button>
-    </div>
+    <BrowserRouter>
+      <CopyProvider>
+        <AppRoutes />
+        <Toaster />
+      </CopyProvider>
+    </BrowserRouter>
   );
 }
 
