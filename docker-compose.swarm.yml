@@ -25,7 +25,7 @@ services:
         - traefik.http.routers.pautacidada_frontend.entrypoints=websecure
         - traefik.http.routers.pautacidada_frontend.tls.certresolver=le
         - traefik.http.routers.pautacidada_frontend.tls=true
-        - traefik.http.services.pautacidada_frontend.loadbalancer.server.port=5173
+        - traefik.http.services.pautacidada_frontend.loadbalancer.server.port=3000
     networks:
       - traefik_public
 
