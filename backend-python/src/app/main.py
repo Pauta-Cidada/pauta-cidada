@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import FastAPI
 
-from app.api.v1 import user
+from app.api.v1 import user, propositions
 from app.core.config import config
 from app.core.logging import setup_logging
 from app.db.schema import Base, engine
@@ -26,3 +26,4 @@ async def health_check():
 
 # Register routes
 app.include_router(user.router, prefix="/api/v1")
+app.include_router(propositions.router, prefix="/api/v1")
