@@ -18,7 +18,7 @@ export default function AuthorTypeBadge({
     <Badge
       {...props}
       className={cn(
-        'bg-green-700 text-white font-semibold hover:cursor-pointer border-transparent',
+        'bg-green-700 text-white font-semibold border-transparent',
         className,
       )}
     >

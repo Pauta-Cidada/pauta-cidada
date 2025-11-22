@@ -17,7 +17,7 @@ export default function PartyBadge({
     <Badge
       {...props}
       className={cn(
-        'bg-pink-700 text-white font-semibold hover:cursor-pointer border-transparent',
+        'bg-pink-700 text-white font-semibold border-transparent',
         className,
       )}
     >

@@ -8,10 +8,10 @@ import { Navigate, Route, Routes } from 'react-router';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route index element={<Navigate to="/dashboard" replace />} />
+      <Route index element={<Navigate to="/noticias" replace />} />
 
       <Route
-        path="/dashboard"
+        path="/noticias"
         element={
           <Layout>
             <Dashboard />
