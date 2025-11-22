@@ -98,7 +98,9 @@ export default function News() {
           className="order-2 lg:order-1 h-[600px] lg:h-full"
         >
           <iframe
-            src="https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800"
+            src={`https://docs.google.com/gview?url=${encodeURIComponent(
+              'https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800',
+            )}&embedded=true`}
             className="w-full h-full border-none"
             title="PDF Viewer"
           />
