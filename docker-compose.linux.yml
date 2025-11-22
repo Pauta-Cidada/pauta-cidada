@@ -1,0 +1,83 @@
+networks:
+  pauta-cidada-network:
+    driver: bridge    
+    enable_ipv6: true
+
+services:
+  # backend:
+  #   container_name: pauta-cidada-backend-node
+  #   build:
+  #     context: ./backend-node
+  #     dockerfile: Dockerfile
+  #   env_file: .env
+  #   restart: unless-stopped
+  #   ports:
+  #     - ${PORT}:${PORT}
+  #   networks:
+  #     - pauta-cidada-network
+  #   command: npm run start:dev
+  #   depends_on:
+  #     - database
+  #   volumes:
+  #     - ./backend-node:/app
+  #     - ./backend-node/node_modules:/app/node_modules
+
+  # database:
+  #   container_name: pauta-cidada-database
+  #   image: pgvector/pgvector:pg18
+  #   restart: unless-stopped
+  #   env_file: .env
+  #   ports:
+  #     - ${DB_EXTERNAL_PORT}:5432
+  #   environment:
+  #     POSTGRES_DB: ${DB_DATABASE}
+  #     POSTGRES_USER: ${DB_USERNAME}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #   volumes:
+  #     - ./postgres_data:/var/lib/postgresql
+  #     - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+  #   networks:
+  #     - pauta-cidada-network
+  
+  frontend:
+    container_name: pauta-cidada-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev  # Usa estágio de desenvolvimento
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - 5173:5173
+    networks:
+      - pauta-cidada-network
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  backend-python:
+    container_name: pauta-cidada-backend-python
+    build:
+      context: ./backend-python
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - ${PYTHON_BACKEND_PORT}:80
+    networks:
+      - pauta-cidada-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_APPLICATION_CREDENTIALS_JSON=${GOOGLE_APPLICATION_CREDENTIALS_JSON}
+      - DATABASE_URL=${DATABASE_URL}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_BUCKET_NAME=${SUPABASE_BUCKET_NAME}
