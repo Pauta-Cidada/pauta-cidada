@@ -78,7 +78,7 @@ export default function News() {
         </div>
         <div className="flex items-center gap-2 text-md">
           <User className="size-4" />
-          <span>{newsItem.nome_autor}</span>
+          <span>Autor: {newsItem.nome_autor}</span>
         </div>
         <div className="w-full md:hidden" />
         <UfBadge uf={newsItem.uf} />

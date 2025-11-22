@@ -56,7 +56,9 @@ services:
     networks:
       - pauta-cidada-network
     command: npm run dev
-    # Sem volumes - tudo roda dentro do container
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   backend-python:
     container_name: pauta-cidada-backend-python
