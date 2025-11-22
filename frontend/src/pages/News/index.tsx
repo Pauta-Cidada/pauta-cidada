@@ -7,7 +7,9 @@ import Loading from '@/components/Loading';
 import ReactMarkdown from 'react-markdown';
 import NewsTypeBadge from '@/components/NewsTypeBadge';
 import UfBadge from '@/components/UfBadge';
-import { Hash, Calendar } from 'lucide-react';
+import AuthorTypeBadge from '@/components/AuthorTypeBadge';
+import PartyBadge from '@/components/PartyBadge';
+import { Hash, Calendar, User } from 'lucide-react';
 import ContentPanel from './components/ContentPanel';
 
 export default function News() {
@@ -73,8 +75,14 @@ export default function News() {
           <Calendar className="size-4" />
           <span>Data de apresentação: {newsItem.presentationDate}</span>
         </div>
+        <div className="flex items-center gap-2 text-md">
+          <User className="size-4" />
+          <span>{newsItem.nome_autor}</span>
+        </div>
         <UfBadge uf={newsItem.uf} />
         <NewsTypeBadge typeCode={newsItem.newsType} />
+        <AuthorTypeBadge authorType={newsItem.tipo_autor!} />
+        <PartyBadge party={newsItem.sigla_partido!} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[1000px]">

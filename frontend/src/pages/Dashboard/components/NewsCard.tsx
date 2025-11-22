@@ -20,6 +20,9 @@ export interface NewsCardProps {
   newsType: string;
   title?: string;
   content?: string;
+  nome_autor?: string;
+  sigla_partido?: string;
+  tipo_autor?: string;
 }
 
 export default function NewsCard({

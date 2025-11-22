@@ -12,6 +12,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Proteção de Dados Pessoais no Ambiente Digital',
     content:
       '# Proteção de Dados Pessoais\n\nEsta proposta visa fortalecer a segurança dos dados dos cidadãos brasileiros na internet.\n\n## Principais pontos:\n- Maior controle sobre dados pessoais\n- Penalidades mais rígidas para vazamentos\n- Criação de novos órgãos fiscalizadores',
+    nome_autor: 'Delegado Paulo Bilynskyj',
+    sigla_partido: 'PL',
+    tipo_autor: 'Deputado(a)',
   },
   {
     id: '2',
@@ -24,6 +27,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Incentivos para Energias Renováveis',
     content:
       '# Energias Renováveis\n\nIncentivos fiscais para empresas que adotarem práticas sustentáveis.\n\n## Benefícios:\n- Redução de impostos\n- Acesso a linhas de crédito especiais',
+    nome_autor: 'Marina Silva',
+    sigla_partido: 'REDE',
+    tipo_autor: 'Senador(a)',
   },
   {
     id: '3',
@@ -36,6 +42,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Reforma do Sistema Educacional',
     content:
       '# Reforma Educacional\n\nMudanças estruturais no sistema de ensino para garantir mais qualidade e autonomia.\n\n## Mudanças:\n- Autonomia para estados\n- Novo currículo base',
+    nome_autor: 'Tabata Amaral',
+    sigla_partido: 'PSB',
+    tipo_autor: 'Deputado(a)',
   },
   {
     id: '4',
@@ -48,6 +57,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Regulamentação do Trabalho Remoto',
     content:
       '# Trabalho Remoto\n\nRegulamentação do home office e teletrabalho no Brasil.\n\n## Direitos:\n- Auxílio infraestrutura\n- Controle de jornada',
+    nome_autor: 'Erika Hilton',
+    sigla_partido: 'PSOL',
+    tipo_autor: 'Deputado(a)',
   },
   {
     id: '5',
@@ -60,6 +72,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Programa Nacional de Combate à Fome',
     content:
       '# Combate à Fome\n\nPrograma governamental para erradicar a fome no país.\n\n## Ações:\n- Distribuição de cestas básicas\n- Apoio à agricultura familiar',
+    nome_autor: 'Valmir Assunção',
+    sigla_partido: 'PT',
+    tipo_autor: 'Senador(a)',
   },
   {
     id: '6',
@@ -72,6 +87,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Modernização do Transporte Público',
     content:
       '# Transporte Público\n\nModernização da frota e melhoria dos serviços de transporte.\n\n## Metas:\n- 100% da frota elétrica até 2030\n- Integração tarifária',
+    nome_autor: 'Gleisi Hoffmann',
+    sigla_partido: 'PT',
+    tipo_autor: 'Deputado(a)',
   },
   {
     id: '7',
@@ -84,6 +102,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Fortalecimento do Sistema Único de Saúde',
     content:
       '# Fortalecimento do SUS\n\nMais investimentos e melhorias no sistema público de saúde.\n\n## Investimentos:\n- Construção de novos hospitais\n- Contratação de médicos',
+    nome_autor: 'Humberto Costa',
+    sigla_partido: 'PT',
+    tipo_autor: 'Senador(a)',
   },
   {
     id: '8',
@@ -96,6 +117,9 @@ export const newsData: NewsCardProps[] = [
     title: 'Incentivos para Startups e Inovação',
     content:
       '# Startups e Inovação\n\nIncentivos para o ecossistema de inovação brasileiro.\n\n## Incentivos:\n- Isenção fiscal nos primeiros anos\n- Facilidade de crédito',
+    nome_autor: 'Luiz Philippe de Orleans e Bragança',
+    sigla_partido: 'PL',
+    tipo_autor: 'Deputado(a)',
   },
   {
     id: '9',
@@ -108,5 +132,8 @@ export const newsData: NewsCardProps[] = [
     title: 'Preservação da Amazônia e Biomas',
     content:
       '# Preservação Ambiental\n\nPolíticas rígidas para a preservação da Amazônia e outros biomas.\n\n## Medidas:\n- Aumento da fiscalização\n- Penas mais severas para desmatamento',
+    nome_autor: 'Eduardo Braga',
+    sigla_partido: 'MDB',
+    tipo_autor: 'Senador(a)',
   },
 ];

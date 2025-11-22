@@ -78,8 +78,7 @@ export default function UfBadge({
       {...props}
       className={cn('bg-purple-500 text-white border-purple-500', className)}
     >
-      {dot && 
-      <div className="w-2 h-2 mr-2 rounded-full bg-white" />}
+      {dot && <div className="w-2 h-2 rounded-full bg-white" />}
       {UfBadgeDictionary[uf]}
     </Badge>
   );

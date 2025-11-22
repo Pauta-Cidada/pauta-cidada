@@ -46,8 +46,8 @@ export default function NewsTypeBadge({
             className,
           )}
         >
-          {dot && <div className="w-2 h-2 mr-2 rounded-full bg-white" />}
-          {newsType.sigla}
+          {dot && <div className="w-2 h-2 rounded-full bg-white" />}
+          Tipo: {newsType.sigla}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>
