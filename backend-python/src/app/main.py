@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import propositions, news
 from app.core.config import config
@@ -9,6 +10,15 @@ from app.core.logging import setup_logging
 setup_logging()
 
 app = FastAPI(title=config.app_name)
+
+# Configuração de CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite todas as origens
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos os métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permite todos os headers
+)
 
 
 # Health check route

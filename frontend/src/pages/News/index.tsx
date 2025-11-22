@@ -1,31 +1,69 @@
 import { PageLayout } from '@/components/Layout';
 import { useParams } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
-import { newsData } from '@/mocks/newsData';
-import type { NewsCardProps } from '@/pages/Dashboard/components/NewsCard';
 import Loading from '@/components/Loading';
 import ReactMarkdown from 'react-markdown';
 import NewsTypeBadge from '@/components/NewsTypeBadge';
-import UfBadge from '@/components/UfBadge';
+import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
 import { Hash, Calendar, User } from 'lucide-react';
 import ContentPanel from './components/ContentPanel';
 import { Separator } from '@/components/ui/separator';
+import { api } from '@/services/api';
+import type { NewsDetail } from '@/types/api.types';
+
+// Interface para o estado da notícia no componente
+interface NewsItemState {
+  id: string;
+  title: string;
+  description: string;
+  number: string;
+  presentationDate: string;
+  uf: UfBadgeType;
+  newsType: string;
+  nome_autor: string;
+  sigla_partido: string;
+  tipo_autor: string;
+  pdfUrl: string;
+  fullContent: string;
+}
 
 export default function News() {
   const { id } = useParams();
 
   const [loading, setLoading] = useState(true);
-  const [newsItem, setNewsItem] = useState<NewsCardProps>();
+  const [newsItem, setNewsItem] = useState<NewsItemState>();
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback(async () => {
+    if (!id) return;
+
     try {
-      const item = newsData.find((n) => n.id === id);
+      setLoading(true);
 
-      setNewsItem(item);
+      const response = await api.get<NewsDetail>(`/api/v1/news/${id}`);
+
+      const newsDetail = response.data;
+
+      const mappedNews: NewsItemState = {
+        id: newsDetail.id,
+        title: newsDetail.title,
+        description: newsDetail.summary,
+        number: newsDetail.proposition_number,
+        presentationDate: newsDetail.presentation_date,
+        uf: newsDetail.uf_author as UfBadgeType,
+        newsType: newsDetail.news_type,
+        nome_autor: newsDetail.author_name,
+        sigla_partido: newsDetail.party,
+        tipo_autor: newsDetail.news_type,
+        pdfUrl: newsDetail.pdf_storage_url,
+        fullContent: newsDetail.full_content,
+      };
+
+      setNewsItem(mappedNews);
     } catch (error) {
-      console.log(error);
+      console.error('Error loading news:', error);
+      setNewsItem(undefined);
     } finally {
       setLoading(false);
     }
@@ -99,7 +137,7 @@ export default function News() {
         >
           <iframe
             src={`https://docs.google.com/gview?url=${encodeURIComponent(
-              'https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800',
+              newsItem.pdfUrl,
             )}&embedded=true`}
             className="w-full h-full border-none"
             title="PDF Viewer"
@@ -110,10 +148,10 @@ export default function News() {
         <ContentPanel
           title="Conteúdo Explicado da Proposta"
           helpText="Aqui você encontra uma tradução do documento oficial em linguagem simples e acessível, facilitando o entendimento do que a proposta realmente significa para o dia a dia."
-          contentClassName="prose prose-invert max-w-none p-6"
-          className="order-1 lg:order-2"
+          contentClassName="prose prose-invert max-w-none p-6 overflow-y-auto"
+          className="order-1 lg:order-2 h-[600px] lg:h-full"
         >
-          <ReactMarkdown>{newsItem.content || ''}</ReactMarkdown>
+          <ReactMarkdown>{newsItem.fullContent || ''}</ReactMarkdown>
         </ContentPanel>
       </div>
     </PageLayout>

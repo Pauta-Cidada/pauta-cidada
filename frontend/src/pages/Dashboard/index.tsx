@@ -17,8 +17,10 @@ import UfSelector from '@/components/UfSelector';
 import NewsTypeSelector from '@/components/NewsTypeSelector';
 import { Search } from 'lucide-react';
 import Loading from '@/components/Loading';
-
-import { newsData } from '@/mocks/newsData';
+import { api } from '@/services/api';
+import type { Proposition, BatchResponse, NewsDetail } from '@/types/api.types';
+import type { AxiosResponse } from 'axios';
+import type { UfBadge } from '@/components/UfBadge';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -33,16 +35,78 @@ export default function Dashboard() {
     },
   });
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
 
-      // Resposta irá vir da API, por hora, vamos utilizar o que temos de mock
-      const response = newsData;
+      // Passo 1: Buscar proposições
+      const propositionsResponse = await api.get<Proposition[]>(
+        '/api/v1/propositions',
+      );
 
-      setNews(response);
+      const propositions = propositionsResponse.data;
+
+      if (!propositions || propositions.length === 0) {
+        setNews([]);
+        return;
+      }
+
+      // Passo 2: Processar cada proposição em batch para gerar notícias
+      const batchResponse = await api.post<BatchResponse>(
+        '/api/v1/news/generate/batch',
+        propositions,
+      );
+
+      const batchResults = batchResponse.data;
+
+      // Verificar se há resultados bem-sucedidos
+      if (!batchResults?.results || batchResults.results.length === 0) {
+        setNews([]);
+        return;
+      }
+
+      // Filtrar apenas os resultados bem-sucedidos e extrair os news_ids
+      const successfulResults = batchResults.results.filter(
+        (result: { success: boolean; news_id: string }) =>
+          result.success && result.news_id,
+      );
+
+      if (successfulResults.length === 0) {
+        setNews([]);
+        return;
+      }
+
+      // Passo 3: Buscar detalhes de cada notícia de forma assíncrona usando Promise.all
+      const newsDetailsPromises = successfulResults.map(
+        (result: { news_id: string }) =>
+          api.get<NewsDetail>(`/api/v1/news/${result.news_id}`),
+      );
+
+      const newsDetailsResponses = await Promise.all(newsDetailsPromises);
+
+      // Passo 4: Mapear os resultados para o formato dos cards
+      const mappedNews: NewsCardProps[] = newsDetailsResponses.map(
+        (response: AxiosResponse<NewsDetail>) => {
+          const newsDetail = response.data;
+          return {
+            id: newsDetail.id,
+            title: newsDetail.title,
+            number: newsDetail.proposition_number,
+            presentationDate: newsDetail.presentation_date,
+            description: newsDetail.summary,
+            uf: newsDetail.uf_author as UfBadge,
+            newsType: newsDetail.news_type,
+            nome_autor: newsDetail.author_name,
+            sigla_partido: newsDetail.party,
+            tipo_autor: newsDetail.news_type,
+          };
+        },
+      );
+
+      setNews(mappedNews);
     } catch (error) {
       console.error('Error loading data:', error);
+      setNews([]);
     } finally {
       setLoading(false);
     }
