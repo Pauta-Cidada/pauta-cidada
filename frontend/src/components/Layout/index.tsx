@@ -2,19 +2,22 @@ import type { PropsWithChildren } from 'react';
 import { cn } from '@/lib/utils';
 import Menu from '../Menu';
 
+import Footer from '../Footer';
+
 interface LayoutProps
   extends React.HtmlHTMLAttributes<HTMLDivElement>,
     PropsWithChildren {}
 
 function Layout({ children, className, ...props }: LayoutProps) {
   return (
-    <div className="w-svw h-svh">
+    <div className="w-full min-h-svh bg-gray-900">
       <Menu />
       <div
-        className={`w-full min-h-screen flex flex-col md:px-20 px-5 py-5 bg-gray-900 ${className}`}
+        className={`w-full flex flex-col min-h-[calc(100vh-80px)] md:px-20 px-5 py-5 ${className}`}
         {...props}
       >
-        {children}
+        <div className="flex-1">{children}</div>
+        <Footer />
       </div>
     </div>
   );

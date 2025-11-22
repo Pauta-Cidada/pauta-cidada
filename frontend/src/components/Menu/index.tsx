@@ -17,13 +17,16 @@ export default function Menu() {
 
   return (
     <>
-      <nav className="bg-gray-900 z-50 flex items-center md:gap-4 py-3 px-6 md:px-24 sticky top-0 border-b border-gray-700">
-        <div>
-          <img src={Logo} className="w-[110px]" />
+      <nav className="bg-gray-900 z-50 flex items-center justify-between md:gap-4 md:py-3 py-0 px-6 md:px-24 sticky top-0 border-b border-gray-700">
+        <div className="w-auto">
+          <img src={Logo} width={110} />
         </div>
 
+        {/* Links de navegação para telas médias */}
         <section
-          className={'ml-12 invisible md:visible w-full flex justify-between'}
+          className={
+            'invisible md:visible md:w-full md:flex md:justify-between md:ml-12'
+          }
         >
           <NavigationMenu>
             <NavigationMenuList>
@@ -50,6 +53,7 @@ export default function Menu() {
             </NavigationMenuList>
           </NavigationMenu>
 
+          {/* Chamada para contribuição open source em dispositivos médios */}
           <div className="flex gap-3 items-center">
             <a
               href="https://github.com/Pauta-Cidada"
@@ -79,7 +83,7 @@ export default function Menu() {
               width={25}
               height={25}
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              className="text-gray-700"
+              className="text-white cursor-pointer"
             />
           )}
 
@@ -88,27 +92,60 @@ export default function Menu() {
               width={25}
               height={25}
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              className="text-gray-700"
+              className="text-white cursor-pointer"
             />
           )}
         </section>
       </nav>
 
-      {/* Exibição temporária do menu para telas mobiles - Precisa finalizar o estilo */}
+      {/* Exibição do menu para telas mobiles */}
       {isMenuOpen && (
-        <div className="md:hidden border-b border-gray-200">
-          <section className="w-full flex flex-col items-start gap-y-2">
+        <div className="md:hidden bg-gray-900 border-b border-gray-700 p-6 flex flex-col gap-6 shadow-xl animate-in slide-in-from-top-5">
+          <section className="w-full flex flex-col items-start gap-y-4">
             <Button
               variant="link"
-              className={'text-gray-700 text-sm font-semibold'}
-              onClick={() => navigate('/empresas')}
+              className="text-white text-lg font-semibold p-0 h-auto"
+              onClick={() => {
+                navigate(`/`);
+                setIsMenuOpen(false);
+              }}
             >
-              Empresas
+              Notícias
+            </Button>
+            <Button
+              variant="link"
+              className="text-white text-lg font-semibold p-0 h-auto"
+              onClick={() => {
+                navigate(`/`);
+                setIsMenuOpen(false);
+              }}
+            >
+              Sobre
             </Button>
           </section>
-          <section className="w-full flex justify-end  p-4 items-center text-white">
-            User
-            {/* <UserDropdown /> */}
+
+          {/* Chamada para contribuição open source em dispositivos móveis */}
+          <section className="w-full flex items-center gap-3">
+            <a
+              href="https://github.com/Pauta-Cidada"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+            >
+              <img
+                src={Github}
+                className="w-[35px] hover:opacity-80 transition-opacity"
+                alt="Github"
+              />
+            </a>
+            <a
+              href="https://github.com/Pauta-Cidada"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-md font-semibold hover:underline"
+            >
+              Contribua para o nosso projeto
+            </a>
           </section>
         </div>
       )}

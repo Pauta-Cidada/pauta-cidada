@@ -1,4 +1,4 @@
-import NewsTypeBadge, { type NewsType } from '@/components/NewsTypeBadge';
+import NewsTypeBadge from '@/components/NewsTypeBadge';
 import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import {
   Card,
@@ -9,17 +9,24 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Hash, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 export interface NewsCardProps {
+  id: string;
   number: string | number;
   presentationDate: string;
   description: string;
   uf: UfBadgeType;
-  newsType: NewsType;
+  newsType: string;
   title?: string;
+  content?: string;
+  nome_autor?: string;
+  sigla_partido?: string;
+  tipo_autor?: string;
 }
 
 export default function NewsCard({
+  id,
   number,
   presentationDate,
   description,
@@ -27,8 +34,13 @@ export default function NewsCard({
   newsType,
   title = 'Título gerado pelo modelo para a notícia',
 }: NewsCardProps) {
+  const navigate = useNavigate();
+
   return (
-    <Card className="w-full max-w-lg hover:cursor-pointer group dark border-white/10 bg-card/50 backdrop-blur-sm">
+    <Card
+      onClick={() => navigate(`/noticia/${id}`)}
+      className="w-full max-w-lg hover:cursor-pointer group dark border-white/10 bg-card/50 backdrop-blur-sm"
+    >
       <CardHeader>
         <CardTitle className="group-hover:text-purple-400 transition-colors">
           {title}
@@ -51,7 +63,7 @@ export default function NewsCard({
       </CardContent>
       <CardFooter className="flex w-full justify-end gap-3">
         <UfBadge uf={uf} />
-        <NewsTypeBadge type={newsType} />
+        <NewsTypeBadge typeCode={newsType} />
       </CardFooter>
     </Card>
   );
