@@ -90,7 +90,7 @@ export default function Dashboard() {
                         <FormControl>
                           <div className="relative group">
                             <Input
-                              placeholder="Pesquise por temas, palavras-chave ou números..."
+                              placeholder="Exemplo: segurança pública"
                               {...field}
                               className="w-full pl-14 pr-16 h-14 text-lg shadow-xl border-white/10 bg-white/5 hover:bg-white/10 transition-all"
                             />
