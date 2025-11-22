@@ -73,6 +73,10 @@ export default function UfBadge({
   className,
   ...props
 }: UfBadgeBadgeProps) {
+  if (!uf) {
+    return null;
+  }
+
   return (
     <Badge
       {...props}

@@ -8,6 +8,7 @@ import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
 import { Hash, Calendar, User } from 'lucide-react';
+import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/services/api';
@@ -55,7 +56,7 @@ export default function News() {
         newsType: newsDetail.news_type,
         nome_autor: newsDetail.author_name,
         sigla_partido: newsDetail.party,
-        tipo_autor: newsDetail.news_type,
+        tipo_autor: newsDetail.author_type,
         pdfUrl: newsDetail.pdf_storage_url,
         fullContent: newsDetail.full_content,
       };
@@ -112,7 +113,10 @@ export default function News() {
         </div>
         <div className="flex items-center gap-2 text-md">
           <Calendar className="size-4" />
-          <span>Data de apresentação: {newsItem.presentationDate}</span>
+          <span>
+            Data de apresentação:{' '}
+            {dayjs(newsItem.presentationDate).format('DD/MM/YYYY')}
+          </span>
         </div>
         <div className="flex items-center gap-2 text-md">
           <User className="size-4" />

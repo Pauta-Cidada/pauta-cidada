@@ -11,7 +11,9 @@ class PropositionService:
         self,
         keywords: Optional[str] = None,
         uf: Optional[str] = None,
-        type: Optional[str] = None
+        type: Optional[str] = None,
+        page: int = 1,
+        per_page: int = 20
     ) -> List[Dict[str, Any]]:
         
         # Construct path to SQL file
@@ -37,7 +39,9 @@ class PropositionService:
             safe_type = type.replace("'", "''")
             query += f"\nAND prop.sigla = '{safe_type}'"
             
-        query += "\nORDER BY ano DESC\nLIMIT 20"
+        limit = per_page
+        offset = (page - 1) * per_page
+        query += f"\nORDER BY ano DESC\nLIMIT {limit} OFFSET {offset}"
         
         # Execute query using BigQuery Client with credentials from .env
         billing_project_id = os.getenv("GOOGLE_CLOUD_PROJECT")

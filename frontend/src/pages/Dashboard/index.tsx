@@ -42,6 +42,12 @@ export default function Dashboard() {
       // Passo 1: Buscar proposições
       const propositionsResponse = await api.get<Proposition[]>(
         '/api/v1/propositions',
+        {
+          params: {
+            page: 1,
+            perPage: 6,
+          },
+        },
       );
 
       const propositions = propositionsResponse.data;

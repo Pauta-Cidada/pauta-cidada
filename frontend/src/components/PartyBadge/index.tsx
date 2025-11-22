@@ -13,6 +13,10 @@ export default function PartyBadge({
   className,
   ...props
 }: PartyBadgeProps) {
+  if (!party) {
+    return null;
+  }
+
   return (
     <Badge
       {...props}

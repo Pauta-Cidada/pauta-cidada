@@ -14,6 +14,10 @@ export default function AuthorTypeBadge({
   className,
   ...props
 }: AuthorTypeBadgeProps) {
+  if (!authorType) {
+    return null;
+  }
+
   return (
     <Badge
       {...props}

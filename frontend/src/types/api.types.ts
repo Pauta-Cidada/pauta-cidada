@@ -44,6 +44,7 @@ export interface NewsDetail {
   presentation_date: string;
   uf_author: string;
   author_name: string;
+  author_type: string;
   party: string;
   news_type: string;
   original_ementa: string;

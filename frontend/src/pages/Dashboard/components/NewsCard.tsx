@@ -8,6 +8,7 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
+import dayjs from 'dayjs';
 import { Hash, Calendar } from 'lucide-react';
 import { Link } from 'react-router';
 
@@ -52,7 +53,10 @@ export default function NewsCard({
             </CardDescription>
             <CardDescription className="flex items-center gap-2">
               <Calendar className="size-3.5" />
-              <span>Data de apresentação: {presentationDate}</span>
+              <span>
+                Data de apresentação:{' '}
+                {dayjs(presentationDate).format('DD/MM/YYYY')}
+              </span>
             </CardDescription>
           </div>
         </CardHeader>
