@@ -5,10 +5,10 @@ import { newsData } from '@/mocks/newsData';
 import type { NewsCardProps } from '@/pages/Dashboard/components/NewsCard';
 import Loading from '@/components/Loading';
 import ReactMarkdown from 'react-markdown';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import NewsTypeBadge from '@/components/NewsTypeBadge';
 import UfBadge from '@/components/UfBadge';
 import { Hash, Calendar } from 'lucide-react';
+import ContentPanel from './components/ContentPanel';
 
 export default function News() {
   const { id } = useParams();
@@ -65,11 +65,11 @@ export default function News() {
 
       {/* Metadados */}
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-md">
           <Hash className="size-4" />
           <span>Número: {newsItem.number}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-md">
           <Calendar className="size-4" />
           <span>Data de apresentação: {newsItem.presentationDate}</span>
         </div>
@@ -79,25 +79,26 @@ export default function News() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[1000px]">
         {/* PDF Panel */}
-        <Card className="h-full dark border-white/10 bg-card/50 hover:scale-100">
-          <CardContent className="p-0 h-full">
-            <iframe
-              src="https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800"
-              className="w-full h-full border-none"
-              title="PDF Viewer"
-            />
-          </CardContent>
-        </Card>
+        <ContentPanel
+          title="Documento Original da Proposta"
+          helpText="Este é o documento oficial da proposta legislativa, exatamente como foi apresentado pelos legisladores. Contém a linguagem jurídica e técnica original."
+          contentClassName="p-0 h-full"
+        >
+          <iframe
+            src="https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800"
+            className="w-full h-full border-none"
+            title="PDF Viewer"
+          />
+        </ContentPanel>
 
         {/* Markdown Panel */}
-        <Card className="h-full dark border-white/10 bg-card/50 hover:cursor-text hover:scale-100">
-          <CardHeader>
-            <CardTitle>Conteúdo da Proposta</CardTitle>
-          </CardHeader>
-          <CardContent className="prose prose-invert max-w-none p-6">
-            <ReactMarkdown>{newsItem.content || ''}</ReactMarkdown>
-          </CardContent>
-        </Card>
+        <ContentPanel
+          title="Conteúdo Explicado da Proposta"
+          helpText="Aqui você encontra uma tradução do documento oficial em linguagem simples e acessível, facilitando o entendimento do que a proposta realmente significa para o dia a dia."
+          contentClassName="prose prose-invert max-w-none p-6"
+        >
+          <ReactMarkdown>{newsItem.content || ''}</ReactMarkdown>
+        </ContentPanel>
       </div>
     </PageLayout>
   );

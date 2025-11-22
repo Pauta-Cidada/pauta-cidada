@@ -41,9 +41,8 @@ export default function NewsTypeBadge({
       <TooltipTrigger asChild>
         <Badge
           {...props}
-          variant="secondary"
           className={cn(
-            'text-white font-semibold hover:cursor-pointer',
+            'bg-orange-700 text-white font-semibold hover:cursor-pointer',
             className,
           )}
         >
