@@ -14,7 +14,7 @@ export default function Footer() {
         </div>
         <p className="text-sm text-muted-foreground/60 max-w-lg leading-relaxed">
           Os conteúdos nessa página, podem ter sido gerados através de
-          inteligência artificial e pode conter imprecisões. Recomendamos
+          inteligência artificial e podem conter imprecisões. Recomendamos
           conferir os dados com as fontes oficiais e ler os documentos
           originais.
         </p>
