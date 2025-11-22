@@ -25,6 +25,23 @@ Copie o arquivo `.env.example` para `.env` e ajuste as variáveis conforme neces
 cp .env.example .env
 ```
 
+**Importante - Credenciais Google Cloud:**
+
+Se você tem um arquivo `credentials.json` do Google Cloud, use o script helper para convertê-lo:
+
+```bash
+./scripts/convert-credentials.sh backend-python/credentials.json
+```
+
+O script gerará a variável `GOOGLE_APPLICATION_CREDENTIALS_JSON` formatada corretamente. Copie e cole no seu `.env`.
+
+**Alternativa manual:**
+```bash
+# Converter credentials.json para uma linha
+cat backend-python/credentials.json | jq -c '.'
+# Cole o resultado na variável GOOGLE_APPLICATION_CREDENTIALS_JSON no .env
+```
+
 ### 3. Garanta que está usando a versão correta do Node.js
 
 Este projeto requer **Node.js versão 24**. Você pode verificar sua versão atual com:

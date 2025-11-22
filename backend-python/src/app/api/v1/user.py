@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.db.schema import SessionLocal
+from app.db.session import get_db
 from app.models.user import UserCreate, UserRead
 from app.services.user_service import UserService
 
 router = APIRouter()
 
 
-def get_user_service() -> UserService:
-    return UserService(session=SessionLocal())
+async def get_user_service(db = Depends(get_db)) -> UserService:
+    return UserService(session=db)
 
 
 @router.get("/users", response_model=list[UserRead])
