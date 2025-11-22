@@ -20,7 +20,7 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/news"
+        path="/noticia/:id"
         element={
           <Layout>
             <News />

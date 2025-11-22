@@ -33,7 +33,7 @@ export const newsSchema = z.object({
       'TO',
     ])
     .optional(),
-  type: z.enum(['pl', 'pec']).optional(),
+  type: z.string().optional(),
 });
 
 export type NewsSchemaDto = z.infer<typeof newsSchema>;

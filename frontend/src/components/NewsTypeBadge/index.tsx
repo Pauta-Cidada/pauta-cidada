@@ -1,31 +1,59 @@
 import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import * as React from 'react';
+import newsTypes from './types.json';
+import { cn } from '@/lib/utils';
 
-export type NewsType = 'pl' | 'pec';
-
-interface NewsTypeBadgeProps {
-  type: NewsType;
+interface NewsTypeBadgeProps
+  extends React.ComponentPropsWithoutRef<typeof Badge> {
+  typeCode: string;
   dot?: boolean;
 }
 
-const NewsTypeDictionary = {
-  pl: 'Projeto de Lei',
-  pec: 'Proposta de Emenda à Constituição',
-};
-
-const dotColor = {
-  pl: 'bg-blue-500',
-  pec: 'bg-orange-500',
-};
+const newsTypeMap = new Map(
+  newsTypes.dados.map((type) => [
+    type.cod,
+    {
+      sigla: type.sigla,
+      nome: type.nome,
+    },
+  ]),
+);
 
 export default function NewsTypeBadge({
-  type,
+  typeCode,
   dot = true,
+  className,
   ...props
 }: NewsTypeBadgeProps) {
+  const newsType = newsTypeMap.get(typeCode);
+
+  if (!newsType || !newsType.sigla) {
+    return null;
+  }
+
   return (
-    <Badge {...props} variant="outline">
-      {dot && <div className={`w-2 h-2 mr-2 rounded-full ${dotColor[type]}`} />}
-      {NewsTypeDictionary[type]}
-    </Badge>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge
+          {...props}
+          variant="secondary"
+          className={cn(
+            'text-white font-semibold hover:cursor-pointer',
+            className,
+          )}
+        >
+          {dot && <div className="w-2 h-2 mr-2 rounded-full bg-white" />}
+          {newsType.sigla}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{newsType.nome}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }
