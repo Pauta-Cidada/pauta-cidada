@@ -27,6 +27,7 @@ class NewsListResponse(BaseModel):
     uf_author: Optional[str] = None
     author_name: Optional[str] = None
     party: Optional[str] = None
+    author_type: Optional[str] = None
     news_type: str
     upvotes: int = 0
     downvotes: int = 0
@@ -50,6 +51,7 @@ class NewsResponse(BaseModel):
     uf_author: Optional[str] = None
     author_name: Optional[str] = None
     party: Optional[str] = None
+    author_type: Optional[str] = None
     news_type: str
     original_ementa: str
     pdf_storage_url: str

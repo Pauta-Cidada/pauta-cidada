@@ -120,6 +120,7 @@ class NewsOrchestratorService:
                 "uf_author": proposition.get("sigla_uf_autor"),
                 "author_name": proposition.get("nome_autor"),
                 "party": proposition.get("sigla_partido"),
+                "author_type": proposition.get("tipo_autor"),
                 "news_type": proposition["sigla"],
                 "original_ementa": proposition.get("ementa") or "",
                 "pdf_storage_url": pdf_url,
