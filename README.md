@@ -146,6 +146,33 @@ docker compose down -v --rmi all
 - Os `node_modules` são compartilhados entre o host e os containers através de volumes Docker
 - Se adicionar novas dependências, instale-as localmente primeiro e depois reinicie os containers
 
+### 🐳 Deploy no Portainer
+
+Para deploy em produção via Portainer, algumas configurações podem precisar de ajuste:
+
+**1. Conexão com Supabase:**
+Se tiver problemas de conectividade (erro "Network is unreachable"), use o **Connection Pooler** do Supabase:
+
+```env
+# Ao invés de db.your-project.supabase.co:5432
+# Use o pooler na porta 6543:
+DATABASE_URL=postgresql+asyncpg://postgres:senha@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+```
+
+O endereço do pooler está em: **Supabase Dashboard → Settings → Database → Connection Pooler**
+
+**2. IPv6:**
+O `docker-compose.yml` está configurado sem IPv6 para melhor compatibilidade com Portainer. Se o seu servidor Portainer suporta IPv6 e você precisa dele, edite:
+
+```yaml
+networks:
+  pauta-cidada-network:
+    enable_ipv6: true  # Altere para true
+```
+
+**3. Variáveis de Ambiente:**
+Use `GOOGLE_APPLICATION_CREDENTIALS_JSON` ao invés de montar arquivo `credentials.json`
+
 ## 📄 Licença
 
 Este projeto está sob a licença especificada no arquivo [LICENSE](LICENSE).

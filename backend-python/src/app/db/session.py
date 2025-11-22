@@ -12,6 +12,11 @@ engine = create_async_engine(
     echo=True,  # Log SQL queries (disable in production)
     future=True,
     pool_pre_ping=True,  # Verify connections before using
+    connect_args={
+        "server_settings": {
+            "jit": "off"
+        }
+    }
 )
 
 # Session factory
