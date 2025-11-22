@@ -11,6 +11,7 @@ import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
 import { Hash, Calendar, User } from 'lucide-react';
 import ContentPanel from './components/ContentPanel';
+import { Separator } from '@/components/ui/separator';
 
 export default function News() {
   const { id } = useParams();
@@ -85,6 +86,8 @@ export default function News() {
         <AuthorTypeBadge authorType={newsItem.tipo_autor!} />
         <PartyBadge party={newsItem.sigla_partido!} />
       </div>
+
+      <Separator />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto lg:h-[1000px]">
         {/* PDF Panel */}
