@@ -1,10 +1,5 @@
 import { CardTitle } from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { HelpCircle } from 'lucide-react';
+import HelpButton from './HelpButton';
 
 interface CardTitleWithHelpProps {
   title: string;
@@ -22,14 +17,7 @@ export default function CardTitleWithHelp({
       className={`text-purple-400 flex items-center justify-between ${className}`}
     >
       {title}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <HelpCircle className="size-5 text-muted-foreground hover:text-purple-400 hover:cursor-pointer transition-colors" />
-        </TooltipTrigger>
-        <TooltipContent className="max-w-md text-md">
-          <p>{helpText}</p>
-        </TooltipContent>
-      </Tooltip>
+      <HelpButton title={title} helpText={helpText} />
     </CardTitle>
   );
 }

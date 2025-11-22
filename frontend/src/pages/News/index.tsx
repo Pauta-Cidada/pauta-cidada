@@ -79,18 +79,20 @@ export default function News() {
           <User className="size-4" />
           <span>{newsItem.nome_autor}</span>
         </div>
+        <div className="w-full md:hidden" />
         <UfBadge uf={newsItem.uf} />
         <NewsTypeBadge typeCode={newsItem.newsType} />
         <AuthorTypeBadge authorType={newsItem.tipo_autor!} />
         <PartyBadge party={newsItem.sigla_partido!} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[1000px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto lg:h-[1000px]">
         {/* PDF Panel */}
         <ContentPanel
           title="Documento Original da Proposta"
           helpText="Este é o documento oficial da proposta legislativa, exatamente como foi apresentado pelos legisladores. Contém a linguagem jurídica e técnica original."
           contentClassName="p-0 h-full"
+          className="order-2 lg:order-1 h-[600px] lg:h-full"
         >
           <iframe
             src="https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800"
@@ -104,6 +106,7 @@ export default function News() {
           title="Conteúdo Explicado da Proposta"
           helpText="Aqui você encontra uma tradução do documento oficial em linguagem simples e acessível, facilitando o entendimento do que a proposta realmente significa para o dia a dia."
           contentClassName="prose prose-invert max-w-none p-6"
+          className="order-1 lg:order-2"
         >
           <ReactMarkdown>{newsItem.content || ''}</ReactMarkdown>
         </ContentPanel>
