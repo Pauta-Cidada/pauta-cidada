@@ -1,9 +1,11 @@
 networks:
   pauta-cidada-network:
     driver: bridge
-    enable_ipv6: false
-    # IPv6 removido para melhor compatibilidade com Portainer
-    # Se precisar de IPv6, habilite no daemon do Docker primeiro
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+        - subnet: fd00::/64
 
 services:
   # backend:
