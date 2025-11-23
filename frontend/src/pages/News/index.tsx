@@ -18,7 +18,7 @@ import {
 import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
 import { ShareDialog } from './components/ShareDialog';
-import TwitterEmbed from './components/TwitterEmbed';
+// import TwitterEmbed from './components/TwitterEmbed';
 import SocialMediaComingSoon from './components/SocialMediaComingSoon';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/services/api';
@@ -383,7 +383,8 @@ export default function News() {
             contentClassName="p-6 flex justify-center overflow-visible"
             className="h-auto"
           >
-            <TwitterEmbed tweetUrl="" />
+            {/* <TwitterEmbed tweetUrl="" /> */}
+            Embedding Twitter
           </ContentPanel>
 
           {/* Facebook Panel - Em breve */}
