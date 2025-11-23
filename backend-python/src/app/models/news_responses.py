@@ -33,7 +33,6 @@ class NewsListResponse(BaseModel):
     downvotes: int = 0
     engagement_score: int = 0
     published_to_social: bool = False
-    twitter_post_url: Optional[str] = None
     created_at: datetime
     
     class Config:
@@ -62,7 +61,6 @@ class NewsResponse(BaseModel):
     engagement_score: int = 0
     published_to_social: bool = False
     social_publish_date: Optional[datetime] = None
-    twitter_post_url: Optional[str] = None
     extra_metadata: NewsMetadata
     created_at: datetime
     updated_at: datetime

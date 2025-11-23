@@ -5,13 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from uuid import UUID
 import logging
-from datetime import datetime
 
 from app.db.session import get_db
 from app.services.news_orchestrator_service import NewsOrchestratorService
 from app.repositories.news_repository import NewsRepository
-from app.services.twitter_service import TwitterService
-from app.core.config import config
 from app.models.news_responses import (
     NewsResponse,
     NewsListResponse,
@@ -246,7 +243,6 @@ async def vote_on_news(
 ):
     """
     Vote on a news (upvote or downvote).
-    Auto-posts to Twitter/X when vote threshold is reached.
     
     Args:
         news_id: UUID of the news
@@ -260,44 +256,7 @@ async def vote_on_news(
     if not news:
         raise HTTPException(status_code=404, detail="News not found")
     
-    logger.info(f"Processing vote for news {news_id}: {vote.vote_type}")
     updated_news = await news_repo.update_votes(news_id, vote.vote_type)
-    
-    # Check if should post to Twitter
-    total_votes = updated_news.upvotes + updated_news.downvotes
-    threshold = config.twitter_vote_threshold
-    
-    logger.info(f"Vote check - Total votes: {total_votes}, Threshold: {threshold}, Twitter URL: {updated_news.twitter_post_url}")
-    
-    if total_votes >= threshold and not updated_news.twitter_post_url:
-        logger.info(f"Attempting to post news {news_id} to Twitter...")
-        try:
-            twitter_service = TwitterService()
-            
-            if twitter_service.client:
-                twitter_url = twitter_service.post_news_to_twitter(updated_news)
-                
-                logger.info(f"Successfully posted to Twitter: {twitter_url}")
-                
-                # Update news with Twitter URL in the same session
-                updated_news.twitter_post_url = twitter_url
-                updated_news.published_to_social = True
-                updated_news.social_publish_date = datetime.utcnow()
-                updated_news.updated_at = datetime.utcnow()
-                
-                # Add footer to full_content
-                footer = f"\n\n---\n📱 Acompanhe a discussão no X: {twitter_url}"
-                updated_news.full_content = updated_news.full_content + footer
-                
-                await news_repo.session.commit()
-                await news_repo.session.refresh(updated_news)
-                
-                logger.info(f"News {news_id} updated with Twitter URL in database")
-            else:
-                logger.warning(f"Twitter client not initialized - skipping post for news {news_id}")
-        except Exception as e:
-            logger.error(f"Failed to post news {news_id} to Twitter: {e}", exc_info=True)
-            # Don't fail the vote if Twitter posting fails - continue normally
     
     return NewsResponse.model_validate(updated_news)
 
