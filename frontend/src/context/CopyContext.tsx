@@ -18,12 +18,16 @@ export const CopyProvider = ({ children }: PropsWithChildren) => {
     try {
       copy(content);
 
-      toast('Texto copiado', {
+      toast.success('Texto copiado', {
         description: 'O texto foi copiado para a sua área de transferência.',
         duration: 3000,
       });
     } catch (error) {
-      console.log(error);
+      console.error('Error copying to clipboard:', error);
+
+      toast.error('Erro ao copiar texto', {
+        description: 'Não foi possível copiar o texto. Tente novamente.',
+      });
     }
   }, []);
 

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { MenuIcon, TrendingUp, XCircle } from 'lucide-react';
 import Logo from '@/assets/logo.png';
 import Github from '@/assets/github.png';
+import TwitterLogo from '@/assets/twitter.png';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -88,7 +89,7 @@ export default function Menu() {
               rel="noopener noreferrer"
               className="text-white text-md font-semibold hover:underline"
             >
-              Contribua para o nosso projeto
+              Participe da discussão
             </a>
             <a
               href="https://github.com/Pauta-Cidada"
@@ -97,7 +98,18 @@ export default function Menu() {
             >
               <img
                 src={Github}
-                className="w-[40px] hover:opacity-80 transition-opacity"
+                className="w-[30px] hover:opacity-80 transition-opacity"
+              />
+            </a>
+            <a
+              href="https://x.com/PautaCidada"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={TwitterLogo}
+                className="w-[30px] hover:opacity-80 transition-opacity"
+                alt="X / Twitter"
               />
             </a>
           </div>
@@ -177,8 +189,20 @@ export default function Menu() {
             >
               <img
                 src={Github}
-                className="w-[35px] hover:opacity-80 transition-opacity"
+                className="w-[30px] hover:opacity-80 transition-opacity"
                 alt="Github"
+              />
+            </a>
+            <a
+              href="https://x.com/PautaCidada"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+            >
+              <img
+                src={TwitterLogo}
+                className="w-[30px] hover:opacity-80 transition-opacity"
+                alt="X / Twitter"
               />
             </a>
             <a
@@ -187,7 +211,7 @@ export default function Menu() {
               rel="noopener noreferrer"
               className="text-white text-md font-semibold hover:underline"
             >
-              Contribua para o nosso projeto
+              Participe da discussão
             </a>
           </section>
         </div>

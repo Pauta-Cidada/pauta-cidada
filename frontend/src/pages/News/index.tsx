@@ -21,6 +21,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/ui/tooltip';
+import { toast } from 'sonner';
 
 interface NewsItemState {
   id: string;
@@ -81,6 +82,9 @@ export default function News() {
     } catch (error) {
       console.error('Error loading news:', error);
       setNewsItem(undefined);
+      toast.error('Erro ao carregar notícia', {
+        description: 'Não foi possível carregar a notícia. Tente novamente.',
+      });
     } finally {
       setLoading(false);
     }
@@ -131,6 +135,22 @@ export default function News() {
         });
       } catch (error) {
         console.error('Error voting on news:', error);
+
+        voteStorage.removeVote(newsItem.id);
+
+        setNewsItem((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            upvotes: voteType === 'upvote' ? prev.upvotes - 1 : prev.upvotes,
+            downvotes:
+              voteType === 'downvote' ? prev.downvotes - 1 : prev.downvotes,
+          };
+        });
+
+        toast.error('Erro ao registrar voto', {
+          description: 'Não foi possível registrar seu voto. Tente novamente.',
+        });
       }
     },
     [newsItem],
@@ -140,10 +160,6 @@ export default function News() {
   useEffect(() => {
     if (dashboardState) {
       sessionStorage.setItem('dashboardState', JSON.stringify(dashboardState));
-      console.log(
-        'Estado do Dashboard salvo em sessionStorage:',
-        dashboardState,
-      );
     }
 
     // Cleanup: se o componente for desmontado e não estivermos navegando de volta,
