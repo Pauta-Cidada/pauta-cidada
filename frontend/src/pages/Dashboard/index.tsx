@@ -18,9 +18,16 @@ import NewsTypeSelector from '@/components/NewsTypeSelector';
 import { Search } from 'lucide-react';
 import Loading from '@/components/Loading';
 import { api } from '@/services/api';
-import type { Proposition, BatchResponse, NewsDetail } from '@/types/api.types';
+import type {
+  Proposition,
+  BatchResponse,
+  NewsDetail,
+  PaginatedNewsResponse,
+} from '@/types/api.types';
 import type { AxiosResponse } from 'axios';
 import type { UfBadge } from '@/components/UfBadge';
+
+const mode: 'process' | 'consume' = 'consume';
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -35,7 +42,7 @@ export default function Dashboard() {
     },
   });
 
-  const loadData = useCallback(async () => {
+  const loadDataProcess = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -118,13 +125,53 @@ export default function Dashboard() {
     }
   }, []);
 
+  const loadDataConsume = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await api.get<PaginatedNewsResponse>('/api/v1/news');
+
+      const news = response.data.items;
+
+      console.log({ news });
+
+      if (!news || news.length === 0) {
+        setNews([]);
+        return;
+      }
+
+      const mappedNews: NewsCardProps[] = news.map((newsDetail) => {
+        return {
+          id: newsDetail.id,
+          title: newsDetail.title,
+          number: newsDetail.proposition_number,
+          presentationDate: newsDetail.presentation_date,
+          description: newsDetail.summary,
+          uf: newsDetail.uf_author as UfBadge,
+          newsType: newsDetail.news_type,
+          nome_autor: newsDetail.author_name,
+          sigla_partido: newsDetail.party,
+          tipo_autor: newsDetail.news_type,
+        };
+      });
+
+      setNews(mappedNews);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      setNews([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const handleSubmit = useCallback((data: NewsSchemaDto) => {
     console.log('Form submitted with data:', data);
   }, []);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (mode === 'consume') loadDataConsume();
+    else loadDataProcess();
+  }, [loadDataConsume, loadDataProcess]);
 
   return (
     <PageLayout className="text-white">

@@ -66,3 +66,17 @@ export interface NewsDetail {
   created_at: string;
   updated_at: string;
 }
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface PaginatedNewsResponse {
+  items: NewsDetail[];
+  pagination: Pagination;
+}
