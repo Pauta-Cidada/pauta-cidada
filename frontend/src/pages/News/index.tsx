@@ -18,7 +18,8 @@ import {
 import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
 import { ShareDialog } from './components/ShareDialog';
-// import TwitterEmbed from './components/TwitterEmbed';
+import TwitterEmbed from './components/TwitterEmbed';
+import TwitterEngagementRequired from './components/TwitterEngagementRequired';
 import SocialMediaComingSoon from './components/SocialMediaComingSoon';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/services/api';
@@ -48,6 +49,7 @@ interface NewsItemState {
   fullContent: string;
   upvotes: number;
   downvotes: number;
+  twitterPostUrl?: string;
 }
 
 export default function News() {
@@ -87,6 +89,7 @@ export default function News() {
         fullContent: newsDetail.full_content,
         upvotes: newsDetail.upvotes,
         downvotes: newsDetail.downvotes,
+        twitterPostUrl: newsDetail.twitter_post_url,
       };
 
       setNewsItem(mappedNews);
@@ -383,8 +386,11 @@ export default function News() {
             contentClassName="p-6 flex justify-center overflow-visible"
             className="h-auto"
           >
-            {/* <TwitterEmbed tweetUrl="" /> */}
-            Embedding Twitter
+            {newsItem.twitterPostUrl ? (
+              <TwitterEmbed tweetUrl={newsItem.twitterPostUrl} />
+            ) : (
+              <TwitterEngagementRequired />
+            )}
           </ContentPanel>
 
           {/* Facebook Panel - Em breve */}
