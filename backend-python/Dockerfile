@@ -23,4 +23,4 @@ ENV PYTHONPATH="/app/src:${PYTHONPATH}"
 # Expose the specified port for FastAPI
 EXPOSE 80
 
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
