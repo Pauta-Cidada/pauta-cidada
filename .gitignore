@@ -11,3 +11,6 @@ temp
 
 # PostgreSQL data directory
 postgres_data/
+
+# Big Query Credentials
+credentials.json

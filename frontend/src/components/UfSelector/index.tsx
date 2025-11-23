@@ -92,6 +92,7 @@ export default function UfSelector({
                 <CommandItem
                   key={uf.value}
                   value={uf.value}
+                  keywords={[uf.label, uf.value]}
                   onSelect={(currentValue) => {
                     const newValue = currentValue.toUpperCase() as UfBadge;
                     onChange(newValue === value ? undefined : newValue);

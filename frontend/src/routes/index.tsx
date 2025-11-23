@@ -1,17 +1,18 @@
 import Dashboard from '@/pages/Dashboard';
 import News from '@/pages/News';
 import NotFound from '@/pages/NotFound';
-import Report from '@/pages/Report';
 import { Layout } from '@/components/Layout';
 import { Navigate, Route, Routes } from 'react-router';
+import About from '@/pages/About';
+import Trending from '@/pages/Trending';
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route index element={<Navigate to="/dashboard" replace />} />
+      <Route index element={<Navigate to="/noticias" replace />} />
 
       <Route
-        path="/dashboard"
+        path="/noticias"
         element={
           <Layout>
             <Dashboard />
@@ -20,7 +21,7 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/news"
+        path="/noticia/:id"
         element={
           <Layout>
             <News />
@@ -29,10 +30,19 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/report"
+        path="/sobre"
         element={
           <Layout>
-            <Report />
+            <About />
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/tendencias"
+        element={
+          <Layout>
+            <Trending />
           </Layout>
         }
       />

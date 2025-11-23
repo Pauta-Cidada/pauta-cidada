@@ -17,16 +17,19 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import type { NewsType } from '@/components/NewsTypeBadge';
+import newsTypes from '@/components/NewsTypeBadge/types.json';
 
-const TYPE_OPTIONS = [
-  { value: 'pl', label: 'Projeto de Lei' },
-  { value: 'pec', label: 'Proposta de Emenda à Constituição' },
-];
+// Criar opções de tipo a partir do types.json, filtrando apenas os que têm sigla
+const TYPE_OPTIONS = newsTypes.dados
+  .filter((type) => type.sigla && type.sigla.trim() !== '')
+  .map((type) => ({
+    value: type.sigla,
+    label: `${type.sigla} - ${type.nome}`,
+  }));
 
 interface NewsTypeSelectorProps {
-  value?: NewsType;
-  onChange: (value: NewsType | undefined) => void;
+  value?: string;
+  onChange: (value: string | undefined) => void;
   placeholder?: string;
   className?: string;
 }
@@ -65,11 +68,11 @@ export default function NewsTypeSelector({
             <CommandGroup>
               {TYPE_OPTIONS.map((type) => (
                 <CommandItem
-                  key={type.value}
+                  key={`${type.value}-${type.label}`}
                   value={type.value}
+                  keywords={[type.label]}
                   onSelect={(currentValue) => {
-                    const newValue = currentValue as NewsType;
-                    onChange(newValue === value ? undefined : newValue);
+                    onChange(currentValue === value ? undefined : currentValue);
                     setOpen(false);
                   }}
                 >

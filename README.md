@@ -25,6 +25,23 @@ Copie o arquivo `.env.example` para `.env` e ajuste as variáveis conforme neces
 cp .env.example .env
 ```
 
+**Importante - Credenciais Google Cloud:**
+
+Se você tem um arquivo `credentials.json` do Google Cloud, use o script helper para convertê-lo:
+
+```bash
+./scripts/convert-credentials.sh backend-python/credentials.json
+```
+
+O script gerará a variável `GOOGLE_APPLICATION_CREDENTIALS_JSON` formatada corretamente. Copie e cole no seu `.env`.
+
+**Alternativa manual:**
+```bash
+# Converter credentials.json para uma linha
+cat backend-python/credentials.json | jq -c '.'
+# Cole o resultado na variável GOOGLE_APPLICATION_CREDENTIALS_JSON no .env
+```
+
 ### 3. Garanta que está usando a versão correta do Node.js
 
 Este projeto requer **Node.js versão 24**. Você pode verificar sua versão atual com:
@@ -128,6 +145,33 @@ docker compose down -v --rmi all
 
 - Os `node_modules` são compartilhados entre o host e os containers através de volumes Docker
 - Se adicionar novas dependências, instale-as localmente primeiro e depois reinicie os containers
+
+### 🐳 Deploy no Portainer
+
+Para deploy em produção via Portainer, algumas configurações podem precisar de ajuste:
+
+**1. Conexão com Supabase:**
+Se tiver problemas de conectividade (erro "Network is unreachable"), use o **Connection Pooler** do Supabase:
+
+```env
+# Ao invés de db.your-project.supabase.co:5432
+# Use o pooler na porta 6543:
+DATABASE_URL=postgresql+asyncpg://postgres:senha@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+```
+
+O endereço do pooler está em: **Supabase Dashboard → Settings → Database → Connection Pooler**
+
+**2. IPv6:**
+O `docker-compose.yml` está configurado sem IPv6 para melhor compatibilidade com Portainer. Se o seu servidor Portainer suporta IPv6 e você precisa dele, edite:
+
+```yaml
+networks:
+  pauta-cidada-network:
+    enable_ipv6: true  # Altere para true
+```
+
+**3. Variáveis de Ambiente:**
+Use `GOOGLE_APPLICATION_CREDENTIALS_JSON` ao invés de montar arquivo `credentials.json`
 
 ## 📄 Licença
 
