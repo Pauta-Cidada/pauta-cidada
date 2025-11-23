@@ -7,9 +7,19 @@ import NewsTypeBadge from '@/components/NewsTypeBadge';
 import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
-import { Hash, Calendar, User, ArrowBigUp, ArrowBigDown } from 'lucide-react';
+import {
+  Hash,
+  Calendar,
+  User,
+  ArrowBigUp,
+  ArrowBigDown,
+  Share2,
+} from 'lucide-react';
 import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
+import { ShareDialog } from './components/ShareDialog';
+import TwitterEmbed from './components/TwitterEmbed';
+import SocialMediaComingSoon from './components/SocialMediaComingSoon';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/services/api';
 import type { NewsDetail } from '@/types/api.types';
@@ -48,6 +58,7 @@ export default function News() {
 
   const [loading, setLoading] = useState(true);
   const [newsItem, setNewsItem] = useState<NewsItemState>();
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
   const dashboardState = location.state as DashboardState | null;
 
@@ -155,6 +166,31 @@ export default function News() {
     },
     [newsItem],
   );
+
+  const handleShare = useCallback(async () => {
+    if (!newsItem) return;
+
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
+    if (isMobile && navigator.share) {
+      const shareData = {
+        title: newsItem.title,
+        text: newsItem.description,
+        url: window.location.href,
+      };
+
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      setIsShareDialogOpen(true);
+    }
+  }, [newsItem]);
 
   // Salvar o estado no sessionStorage quando recebê-lo
   useEffect(() => {
@@ -288,6 +324,15 @@ export default function News() {
             </p>
           </TooltipContent>
         </Tooltip>
+
+        <button
+          onClick={handleShare}
+          className="hover:cursor-pointer flex items-center gap-1.5 text-muted-foreground hover:text-blue-500 transition-colors ml-2"
+          aria-label="Compartilhar"
+        >
+          <Share2 width={24} />
+          <span className="text-base font-medium">Compartilhar</span>
+        </button>
       </div>
 
       <Separator />
@@ -319,6 +364,73 @@ export default function News() {
           <ReactMarkdown>{newsItem.fullContent || ''}</ReactMarkdown>
         </ContentPanel>
       </div>
+
+      {/* Social Media Panels */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold tracking-tight">
+          Repercussão nas Redes
+        </h2>
+        <p className="text-muted-foreground">
+          Acompanhe a discussão e a repercussão pública sobre esta proposta nas
+          redes sociais.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Twitter/X Panel - Com embedding real */}
+          <ContentPanel
+            title="X (Twitter)"
+            helpText="Veja como esta proposta está sendo discutida no Twitter/X."
+            contentClassName="p-6 flex justify-center overflow-visible"
+            className="h-auto"
+          >
+            <TwitterEmbed tweetUrl="" />
+          </ContentPanel>
+
+          {/* Facebook Panel - Em breve */}
+          <ContentPanel
+            title="Facebook"
+            helpText="Em breve você poderá ver as discussões sobre esta proposta no Facebook."
+            contentClassName="p-0"
+            className="h-auto"
+          >
+            <SocialMediaComingSoon platform="facebook" />
+          </ContentPanel>
+
+          {/* Instagram Panel - Em breve */}
+          <ContentPanel
+            title="Instagram"
+            helpText="Em breve você poderá ver as discussões sobre esta proposta no Instagram."
+            contentClassName="p-0"
+            className="h-auto"
+          >
+            <SocialMediaComingSoon
+              platform="instagram"
+              message="Posts no Instagram em breve, fique ligado!"
+            />
+          </ContentPanel>
+
+          {/* LinkedIn Panel - Em breve */}
+          <ContentPanel
+            title="LinkedIn"
+            helpText="Em breve você poderá ver as discussões sobre esta proposta no LinkedIn."
+            contentClassName="p-0"
+            className="h-auto"
+          >
+            <SocialMediaComingSoon
+              platform="linkedin"
+              message="Discussões profissionais no LinkedIn em breve!"
+            />
+          </ContentPanel>
+        </div>
+      </div>
+
+      <ShareDialog
+        open={isShareDialogOpen}
+        onOpenChange={setIsShareDialogOpen}
+        url={window.location.href}
+        title={newsItem.title}
+        description={newsItem.description}
+      />
     </PageLayout>
   );
 }
