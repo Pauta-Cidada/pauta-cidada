@@ -45,7 +45,7 @@ export default function Menu() {
                 <Button
                   variant="link"
                   className="text-white text-md font-semibold"
-                  onClick={() => navigate(`/`)}
+                  onClick={() => navigate(`/sobre`)}
                 >
                   Sobre
                 </Button>
@@ -116,7 +116,7 @@ export default function Menu() {
               variant="link"
               className="text-white text-lg font-semibold p-0 h-auto"
               onClick={() => {
-                navigate(`/`);
+                navigate(`/sobre`);
                 setIsMenuOpen(false);
               }}
             >
