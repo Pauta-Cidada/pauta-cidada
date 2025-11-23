@@ -383,7 +383,7 @@ export default function News() {
             contentClassName="p-6 flex justify-center overflow-visible"
             className="h-auto"
           >
-            <TwitterEmbed tweetUrl="https://x.com/Rickygfl/status/1988328263664738607" />
+            <TwitterEmbed tweetUrl="" />
           </ContentPanel>
 
           {/* Facebook Panel - Em breve */}
