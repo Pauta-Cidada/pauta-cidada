@@ -8,10 +8,16 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip';
 import dayjs from 'dayjs';
-import { Hash, Calendar } from 'lucide-react';
+import { Hash, Calendar, ArrowBigUp, ArrowBigDown } from 'lucide-react';
 import { Link } from 'react-router';
 import type { DashboardState } from '../index';
+import { voteStorage, type VoteType } from '@/services/voteStorage';
 
 export interface NewsCardProps {
   id: string;
@@ -25,7 +31,10 @@ export interface NewsCardProps {
   nome_autor?: string;
   sigla_partido?: string;
   tipo_autor?: string;
+  upvotes?: number;
+  downvotes?: number;
   dashboardState?: DashboardState;
+  onVote?: (newsId: string, voteType: VoteType) => void;
 }
 
 export default function NewsCard({
@@ -36,8 +45,32 @@ export default function NewsCard({
   uf,
   newsType,
   title = 'Título gerado pelo modelo para a notícia',
+  upvotes = 0,
+  downvotes = 0,
   dashboardState,
+  onVote,
 }: NewsCardProps) {
+  // Verificar se o usuário já votou nesta notícia
+  const userVote = voteStorage.getVote(id);
+  const hasUpvoted = userVote === 'upvote';
+  const hasDownvoted = userVote === 'downvote';
+
+  const handleVote = (e: React.MouseEvent, voteType: 'upvote' | 'downvote') => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Verificar se o usuário já votou
+    if (voteStorage.hasVoted(id)) {
+      console.log('Você já votou nesta notícia');
+      return;
+    }
+
+    // Chamar a função de votação passada pelo Dashboard
+    if (onVote) {
+      onVote(id, voteType);
+    }
+  };
+
   return (
     <Link
       to={`/noticia/${id}`}
@@ -71,9 +104,63 @@ export default function NewsCard({
             </p>
           </div>
         </CardContent>
-        <CardFooter className="flex w-full justify-end gap-3">
-          <UfBadge uf={uf} />
-          <NewsTypeBadge typeCode={newsType} />
+        <CardFooter className="flex w-full justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={(e) => handleVote(e, 'upvote')}
+                  className={`hover:cursor-pointer flex items-center gap-1 transition-colors ${
+                    hasUpvoted
+                      ? 'text-green-500'
+                      : 'text-muted-foreground hover:text-green-500'
+                  }`}
+                  aria-label="Upvote"
+                  disabled={voteStorage.hasVoted(id)}
+                >
+                  <ArrowBigUp width={20} />
+                  <span className="text-sm">{upvotes}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {hasUpvoted
+                    ? 'Você já votou positivamente'
+                    : 'Votar positivamente nesta notícia'}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={(e) => handleVote(e, 'downvote')}
+                  className={`hover:cursor-pointer flex items-center gap-1 transition-colors ${
+                    hasDownvoted
+                      ? 'text-red-500'
+                      : 'text-muted-foreground hover:text-red-500'
+                  }`}
+                  aria-label="Downvote"
+                  disabled={voteStorage.hasVoted(id)}
+                >
+                  <ArrowBigDown width={20} />
+                  <span className="text-sm">{downvotes}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {hasDownvoted
+                    ? 'Você já votou negativamente'
+                    : 'Votar negativamente nesta notícia'}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+
+          <div className="flex gap-3">
+            <UfBadge uf={uf} />
+            <NewsTypeBadge typeCode={newsType} />
+          </div>
         </CardFooter>
       </Card>
     </Link>

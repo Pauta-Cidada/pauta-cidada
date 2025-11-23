@@ -33,6 +33,7 @@ import type { AxiosResponse } from 'axios';
 import type { UfBadge } from '@/components/UfBadge';
 import { useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
+import { voteStorage, type VoteType } from '@/services/voteStorage';
 
 const mode: 'process' | 'consume' = 'consume';
 
@@ -142,6 +143,8 @@ export default function Dashboard() {
             nome_autor: newsDetail.author_name,
             sigla_partido: newsDetail.party,
             tipo_autor: newsDetail.news_type,
+            upvotes: newsDetail.upvotes,
+            downvotes: newsDetail.downvotes,
           };
         },
       );
@@ -192,6 +195,8 @@ export default function Dashboard() {
             nome_autor: newsDetail.author_name,
             sigla_partido: newsDetail.party,
             tipo_autor: newsDetail.news_type,
+            upvotes: newsDetail.upvotes,
+            downvotes: newsDetail.downvotes,
           };
         });
 
@@ -254,6 +259,42 @@ export default function Dashboard() {
       loadDataConsume(1);
     }, 0);
   }, [form, loadDataConsume]);
+
+  const handleVote = useCallback(async (newsId: string, voteType: VoteType) => {
+    try {
+      // Vamos atualizar a contagem dos votos primeiro na tela, para depois chamar a API
+      // Para que o usuário tenha uma melhor experiência para não esperar a API responder
+
+      // Salvar o voto do usuário localmente
+      voteStorage.setVote(newsId, voteType);
+
+      // Atualizar a contagem local da notícia
+      setNews((prevNews) =>
+        prevNews.map((newsItem) => {
+          if (newsItem.id === newsId) {
+            return {
+              ...newsItem,
+              upvotes:
+                voteType === 'upvote'
+                  ? (newsItem.upvotes || 0) + 1
+                  : newsItem.upvotes || 0,
+              downvotes:
+                voteType === 'downvote'
+                  ? (newsItem.downvotes || 0) + 1
+                  : newsItem.downvotes || 0,
+            };
+          }
+          return newsItem;
+        }),
+      );
+
+      await api.patch(`/api/v1/news/${newsId}/vote`, {
+        vote_type: voteType,
+      });
+    } catch (error) {
+      console.error('Error voting on news:', error);
+    }
+  }, []);
 
   // Restaurar estado quando voltar da página de notícia
   useEffect(() => {
@@ -453,6 +494,7 @@ export default function Dashboard() {
                     key={newsItem.number}
                     {...newsItem}
                     dashboardState={dashboardState}
+                    onVote={handleVote}
                   />
                 );
               })}
