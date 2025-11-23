@@ -31,6 +31,7 @@ class News(Base):
     uf_author = Column(String(2), nullable=True, index=True)
     author_name = Column(String(100), nullable=True)
     party = Column(String(50), nullable=True)
+    author_type = Column(String(50), nullable=True)
     
     # Classification
     news_type = Column(String(10), nullable=False, index=True)  # PL, PEC, EMP, etc

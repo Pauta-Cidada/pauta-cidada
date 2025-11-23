@@ -16,7 +16,7 @@ interface NewsTypeBadgeProps
 
 const newsTypeMap = new Map(
   newsTypes.dados.map((type) => [
-    type.cod,
+    type.sigla,
     {
       sigla: type.sigla,
       nome: type.nome,

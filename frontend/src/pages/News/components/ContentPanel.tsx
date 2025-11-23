@@ -19,12 +19,14 @@ export default function ContentPanel({
 }: ContentPanelProps) {
   return (
     <Card
-      className={`h-full dark border-white/10 bg-card/50 hover:cursor-text hover:scale-100 ${className}`}
+      className={`h-full dark border-white/10 bg-card/50 hover:cursor-text hover:scale-100 flex flex-col py-0 overflow-hidden ${className}`}
     >
-      <CardHeader>
+      <CardHeader className="flex-shrink-0 pt-6">
         <CardTitleWithHelp title={title} helpText={helpText} />
       </CardHeader>
-      <CardContent className={contentClassName}>{children}</CardContent>
+      <CardContent className={`flex-1 min-h-0 ${contentClassName}`}>
+        {children}
+      </CardContent>
     </Card>
   );
 }

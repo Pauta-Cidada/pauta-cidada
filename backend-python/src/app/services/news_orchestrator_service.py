@@ -120,6 +120,7 @@ class NewsOrchestratorService:
                 "uf_author": proposition.get("sigla_uf_autor"),
                 "author_name": proposition.get("nome_autor"),
                 "party": proposition.get("sigla_partido"),
+                "author_type": proposition.get("tipo_autor"),
                 "news_type": proposition["sigla"],
                 "original_ementa": proposition.get("ementa") or "",
                 "pdf_storage_url": pdf_url,
@@ -180,11 +181,19 @@ class NewsOrchestratorService:
         Returns:
             List of result dicts for each proposition
         """
+        # Import here to avoid circular imports
+        from app.db.session import async_session_maker
+        
         semaphore = asyncio.Semaphore(max_concurrent)
         
         async def process_with_limit(prop):
             async with semaphore:
-                return await self.process_proposition(prop)
+                # Create a new session for each task to avoid "concurrent operations" error
+                # SQLAlchemy AsyncSession is not thread/task safe for concurrent operations
+                async with async_session_maker() as session:
+                    # Create a new orchestrator instance for this task with its own session
+                    task_orchestrator = NewsOrchestratorService(session)
+                    return await task_orchestrator.process_proposition(prop)
         
         logger.info(f"Starting batch processing of {len(propositions)} propositions")
         

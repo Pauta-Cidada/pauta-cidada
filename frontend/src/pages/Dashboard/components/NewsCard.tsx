@@ -8,8 +8,10 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
+import dayjs from 'dayjs';
 import { Hash, Calendar } from 'lucide-react';
 import { Link } from 'react-router';
+import type { DashboardState } from '../index';
 
 export interface NewsCardProps {
   id: string;
@@ -23,6 +25,7 @@ export interface NewsCardProps {
   nome_autor?: string;
   sigla_partido?: string;
   tipo_autor?: string;
+  dashboardState?: DashboardState;
 }
 
 export default function NewsCard({
@@ -33,10 +36,12 @@ export default function NewsCard({
   uf,
   newsType,
   title = 'Título gerado pelo modelo para a notícia',
+  dashboardState,
 }: NewsCardProps) {
   return (
     <Link
       to={`/noticia/${id}`}
+      state={dashboardState}
       className="w-full max-w-lg group block"
       style={{ WebkitTapHighlightColor: 'transparent' }}
     >
@@ -52,7 +57,10 @@ export default function NewsCard({
             </CardDescription>
             <CardDescription className="flex items-center gap-2">
               <Calendar className="size-3.5" />
-              <span>Data de apresentação: {presentationDate}</span>
+              <span>
+                Data de apresentação:{' '}
+                {dayjs(presentationDate).format('DD/MM/YYYY')}
+              </span>
             </CardDescription>
           </div>
         </CardHeader>

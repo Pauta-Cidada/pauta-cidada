@@ -1,35 +1,119 @@
 import { PageLayout } from '@/components/Layout';
-import { useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
-import { newsData } from '@/mocks/newsData';
-import type { NewsCardProps } from '@/pages/Dashboard/components/NewsCard';
 import Loading from '@/components/Loading';
 import ReactMarkdown from 'react-markdown';
 import NewsTypeBadge from '@/components/NewsTypeBadge';
-import UfBadge from '@/components/UfBadge';
+import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
 import { Hash, Calendar, User } from 'lucide-react';
+import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
 import { Separator } from '@/components/ui/separator';
+import { api } from '@/services/api';
+import type { NewsDetail } from '@/types/api.types';
+import type { DashboardState } from '../Dashboard';
+import { Button } from '@/components/ui/button';
+
+interface NewsItemState {
+  id: string;
+  title: string;
+  description: string;
+  number: string;
+  presentationDate: string;
+  uf: UfBadgeType;
+  newsType: string;
+  nome_autor: string;
+  sigla_partido: string;
+  tipo_autor: string;
+  pdfUrl: string;
+  fullContent: string;
+}
 
 export default function News() {
   const { id } = useParams();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [loading, setLoading] = useState(true);
-  const [newsItem, setNewsItem] = useState<NewsCardProps>();
+  const [newsItem, setNewsItem] = useState<NewsItemState>();
 
-  const loadData = useCallback(() => {
+  const dashboardState = location.state as DashboardState | null;
+
+  const loadData = useCallback(async () => {
+    if (!id) return;
+
     try {
-      const item = newsData.find((n) => n.id === id);
+      setLoading(true);
 
-      setNewsItem(item);
+      const response = await api.get<NewsDetail>(`/api/v1/news/${id}`);
+
+      const newsDetail = response.data;
+
+      const mappedNews: NewsItemState = {
+        id: newsDetail.id,
+        title: newsDetail.title,
+        description: newsDetail.summary,
+        number: newsDetail.proposition_number,
+        presentationDate: newsDetail.presentation_date,
+        uf: newsDetail.uf_author as UfBadgeType,
+        newsType: newsDetail.news_type,
+        nome_autor: newsDetail.author_name,
+        sigla_partido: newsDetail.party,
+        tipo_autor: newsDetail.author_type,
+        pdfUrl: newsDetail.pdf_storage_url,
+        fullContent: newsDetail.full_content,
+      };
+
+      setNewsItem(mappedNews);
     } catch (error) {
-      console.log(error);
+      console.error('Error loading news:', error);
+      setNewsItem(undefined);
     } finally {
       setLoading(false);
     }
   }, [id]);
+
+  const handleGoBack = useCallback(() => {
+    // Tentar obter o estado do location.state ou do sessionStorage
+    const storageState = JSON.parse(
+      sessionStorage.getItem('dashboardState') || 'null',
+    );
+
+    const stateToPass = dashboardState || storageState;
+
+    if (stateToPass) {
+      // Navegar passando o estado
+      navigate('/noticias', { state: stateToPass });
+
+      // Limpar o sessionStorage após usar
+      sessionStorage.removeItem('dashboardState');
+    } else {
+      // Caso contrário, apenas volta
+      navigate('/noticias');
+    }
+  }, [navigate, dashboardState]);
+
+  // Salvar o estado no sessionStorage quando recebê-lo
+  useEffect(() => {
+    if (dashboardState) {
+      sessionStorage.setItem('dashboardState', JSON.stringify(dashboardState));
+      console.log(
+        'Estado do Dashboard salvo em sessionStorage:',
+        dashboardState,
+      );
+    }
+
+    // Cleanup: se o componente for desmontado e não estivermos navegando de volta,
+    // limpar o sessionStorage (isso acontece se o usuário navegar para outra página)
+    return () => {
+      // Este cleanup será executado quando o componente desmontar
+      // Não fazemos nada aqui pois o cleanup real acontece no handleGoBack
+      // ou no Dashboard após restaurar o estado
+    };
+  }, [dashboardState]);
 
   useEffect(() => {
     if (id) {
@@ -66,6 +150,11 @@ export default function News() {
         <p className="text-muted-foreground text-lg">{newsItem.description}</p>
       </div>
 
+      {/* Por hora, vamos manter a referência de funcionalidade, mas deixar o botão oculto */}
+      <Button className="hidden" onClick={handleGoBack}>
+        Voltar
+      </Button>
+
       {/* Metadados */}
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 text-md">
@@ -74,7 +163,10 @@ export default function News() {
         </div>
         <div className="flex items-center gap-2 text-md">
           <Calendar className="size-4" />
-          <span>Data de apresentação: {newsItem.presentationDate}</span>
+          <span>
+            Data de apresentação:{' '}
+            {dayjs(newsItem.presentationDate).format('DD/MM/YYYY')}
+          </span>
         </div>
         <div className="flex items-center gap-2 text-md">
           <User className="size-4" />
@@ -99,7 +191,7 @@ export default function News() {
         >
           <iframe
             src={`https://docs.google.com/gview?url=${encodeURIComponent(
-              'https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2441800',
+              newsItem.pdfUrl,
             )}&embedded=true`}
             className="w-full h-full border-none"
             title="PDF Viewer"
@@ -110,10 +202,10 @@ export default function News() {
         <ContentPanel
           title="Conteúdo Explicado da Proposta"
           helpText="Aqui você encontra uma tradução do documento oficial em linguagem simples e acessível, facilitando o entendimento do que a proposta realmente significa para o dia a dia."
-          contentClassName="prose prose-invert max-w-none p-6"
-          className="order-1 lg:order-2"
+          contentClassName="prose prose-invert max-w-none p-6 overflow-y-auto"
+          className="order-1 lg:order-2 h-[600px] lg:h-full"
         >
-          <ReactMarkdown>{newsItem.content || ''}</ReactMarkdown>
+          <ReactMarkdown>{newsItem.fullContent || ''}</ReactMarkdown>
         </ContentPanel>
       </div>
     </PageLayout>
