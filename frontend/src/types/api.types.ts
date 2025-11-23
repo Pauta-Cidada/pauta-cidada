@@ -55,6 +55,7 @@ export interface NewsDetail {
   engagement_score: number;
   published_to_social: boolean;
   social_publish_date: string;
+  twitter_post_url: string;
   extra_metadata: {
     tags: string[];
     impact_level: string;
