@@ -12,6 +12,7 @@ interface NewsTypeBadgeProps
   extends React.ComponentPropsWithoutRef<typeof Badge> {
   typeCode: string;
   dot?: boolean;
+  showLabelTypeText?: boolean;
 }
 
 const newsTypeMap = new Map(
@@ -27,6 +28,7 @@ const newsTypeMap = new Map(
 export default function NewsTypeBadge({
   typeCode,
   dot = true,
+  showLabelTypeText = true,
   className,
   ...props
 }: NewsTypeBadgeProps) {
@@ -47,7 +49,7 @@ export default function NewsTypeBadge({
           )}
         >
           {dot && <div className="w-2 h-2 rounded-full bg-white" />}
-          Tipo: {newsType.sigla}
+          {showLabelTypeText ? `Tipo: ${newsType.sigla}` : newsType.sigla}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>
