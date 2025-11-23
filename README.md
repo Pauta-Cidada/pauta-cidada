@@ -2,11 +2,40 @@
 
 O **Pauta Cidadã** é uma plataforma de código aberto que utiliza Inteligência Artificial para traduzir documentos legislativos complexos em notícias acessíveis, conectando leis abstratas ao cotidiano das pessoas. Mais do que informar, a ferramenta empodera a sociedade através de um sistema de engajamento que mede a aprovação popular e, ao atingir relevância, amplifica automaticamente a voz da comunidade nas redes sociais, transformando dados técnicos em debate público real.
 
+**🌐 Projeto em produção:** [https://pautacidada.com.br](https://pautacidada.com.br)  
+**🐦 Acompanhe no X:** [@PautaCidada](https://x.com/PautaCidada)
+
+Este projeto foi desenvolvido durante o [Hackathon Devs de Impacto](https://devsdeimpacto.imasters.com.br/).
+
+## 👥 Equipe
+
+- [Giancarlo Verdum](https://github.com/gianverdum)
+- [Rhenan Dias](https://github.com/rhenandias)
+- [Raul Santos](https://github.com/Raul26-tech)
+
+## 🤝 Como Contribuir
+
+Este é um projeto de código aberto! Se você quer contribuir, visite nosso repositório:
+[https://github.com/Pauta-Cidada](https://github.com/Pauta-Cidada)
+
 ## 📋 Pré-requisitos
 
+### Para executar com Docker (recomendado):
 - [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
-- [Node.js](https://nodejs.org/) (versão 24 ou superior)
-- [npm](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
+
+### Para desenvolvimento local:
+- **Frontend:**
+  - [Node.js](https://nodejs.org/) (versão 24 ou superior)
+  - [npm](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
+
+- **Backend Python (FastAPI):**
+  - [Python](https://www.python.org/) (versão 3.13 ou superior)
+  - [uv](https://github.com/astral-sh/uv) (gerenciador de pacotes Python)
+
+### Serviços externos necessários:
+- Conta no [Supabase](https://supabase.com/) (PostgreSQL + Storage)
+- Chave da API [OpenAI](https://platform.openai.com/) (GPT-4o-mini)
+- Credenciais do [Google Cloud](https://cloud.google.com/) (BigQuery)
 
 ## 🚀 Como executar o projeto
 
@@ -175,4 +204,8 @@ Use `GOOGLE_APPLICATION_CREDENTIALS_JSON` ao invés de montar arquivo `credentia
 
 ## 📄 Licença
 
-Este projeto está sob a licença especificada no arquivo [LICENSE](LICENSE).
+Este projeto é open source e está sob a licença especificada no arquivo [LICENSE](LICENSE).
+
+---
+
+**Desenvolvido com ❤️ pela equipe "Git Push Se Deus Quiser" durante o Hackathon Devs de Impacto**
