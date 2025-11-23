@@ -177,7 +177,7 @@ export default function About() {
               </h2>
               <p className="text-muted-foreground">
                 Este projeto foi desenvolvido durante o hackathon Devs de
-                Impacto.
+                Impacto Online 2025.
               </p>
             </div>
 
