@@ -140,9 +140,17 @@ export default function Menu() {
         </section>
       </nav>
 
+      {/* Overlay escuro quando o menu mobile está aberto */}
+      {isMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+
       {/* Exibição do menu para telas mobiles */}
       {isMenuOpen && (
-        <div className="md:hidden bg-gray-900 border-b border-gray-700 p-6 flex flex-col gap-6 shadow-xl animate-in slide-in-from-top-5">
+        <div className="md:hidden fixed top-[60px] left-0 right-0 w-full bg-gray-900 border-b border-gray-700 p-6 flex flex-col gap-6 shadow-xl animate-in slide-in-from-top-5 z-40">
           <section className="w-full flex flex-col items-start gap-y-4">
             <Button
               variant="link"
