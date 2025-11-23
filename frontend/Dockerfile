@@ -10,6 +10,12 @@ CMD ["npm", "run", "dev"]
 # Estágio 1: Build (para produção)
 FROM node:24-alpine AS builder
 WORKDIR /app
+
+# Recebe a variável como build argument
+ARG VITE_API_URL
+# Converte para variável de ambiente para o Vite acessar
+ENV VITE_API_URL=${VITE_API_URL}
+
 COPY package*.json ./
 RUN npm install
 COPY . . 
