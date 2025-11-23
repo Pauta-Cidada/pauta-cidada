@@ -7,9 +7,17 @@ import NewsTypeBadge from '@/components/NewsTypeBadge';
 import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
-import { Hash, Calendar, User, ArrowBigUp, ArrowBigDown } from 'lucide-react';
+import {
+  Hash,
+  Calendar,
+  User,
+  ArrowBigUp,
+  ArrowBigDown,
+  Share2,
+} from 'lucide-react';
 import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
+import { ShareDialog } from './components/ShareDialog';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/services/api';
 import type { NewsDetail } from '@/types/api.types';
@@ -48,6 +56,7 @@ export default function News() {
 
   const [loading, setLoading] = useState(true);
   const [newsItem, setNewsItem] = useState<NewsItemState>();
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
   const dashboardState = location.state as DashboardState | null;
 
@@ -155,6 +164,31 @@ export default function News() {
     },
     [newsItem],
   );
+
+  const handleShare = useCallback(async () => {
+    if (!newsItem) return;
+
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
+    if (isMobile && navigator.share) {
+      const shareData = {
+        title: newsItem.title,
+        text: newsItem.description,
+        url: window.location.href,
+      };
+
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      setIsShareDialogOpen(true);
+    }
+  }, [newsItem]);
 
   // Salvar o estado no sessionStorage quando recebê-lo
   useEffect(() => {
@@ -288,6 +322,15 @@ export default function News() {
             </p>
           </TooltipContent>
         </Tooltip>
+
+        <button
+          onClick={handleShare}
+          className="hover:cursor-pointer flex items-center gap-1.5 text-muted-foreground hover:text-blue-500 transition-colors ml-2"
+          aria-label="Compartilhar"
+        >
+          <Share2 width={24} />
+          <span className="text-base font-medium">Compartilhar</span>
+        </button>
       </div>
 
       <Separator />
@@ -319,6 +362,14 @@ export default function News() {
           <ReactMarkdown>{newsItem.fullContent || ''}</ReactMarkdown>
         </ContentPanel>
       </div>
+
+      <ShareDialog
+        open={isShareDialogOpen}
+        onOpenChange={setIsShareDialogOpen}
+        url={window.location.href}
+        title={newsItem.title}
+        description={newsItem.description}
+      />
     </PageLayout>
   );
 }
