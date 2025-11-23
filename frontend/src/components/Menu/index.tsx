@@ -1,7 +1,7 @@
 import { Button } from '../ui/button';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { MenuIcon, XCircle } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router';
+import { MenuIcon, TrendingUp, XCircle } from 'lucide-react';
 import Logo from '@/assets/logo.png';
 import Github from '@/assets/github.png';
 import {
@@ -12,13 +12,22 @@ import {
 
 export default function Menu() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isNoticiasActive =
+    location.pathname === '/noticias' ||
+    location.pathname.startsWith('/noticia/') ||
+    location.pathname === '/';
+
+  const isEmAltaActive = location.pathname === '/tendencias';
+  const isSobreActive = location.pathname === '/sobre';
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
-      <nav className="bg-gray-900 z-50 flex items-center justify-between md:gap-4 md:py-3 py-0 px-6 md:px-24 sticky top-0 border-b border-gray-700">
-        <div className="w-auto">
+      <nav className="bg-gray-900 z-50 flex items-center justify-between md:gap-4 md:py-3 md:px-24 sticky top-0 border-b border-gray-700">
+        <div className="ml-3">
           <img src={Logo} width={110} />
         </div>
 
@@ -33,7 +42,9 @@ export default function Menu() {
               <NavigationMenuItem>
                 <Button
                   variant="link"
-                  className="text-white text-md font-semibold"
+                  className={`text-md font-semibold ${
+                    isNoticiasActive ? 'text-purple-500' : 'text-white'
+                  }`}
                   onClick={() => navigate(`/`)}
                 >
                   Notícias
@@ -44,7 +55,23 @@ export default function Menu() {
               <NavigationMenuItem>
                 <Button
                   variant="link"
-                  className="text-white text-md font-semibold"
+                  className={`text-md font-semibold ${
+                    isEmAltaActive ? 'text-purple-500' : 'text-white'
+                  }`}
+                  onClick={() => navigate(`/tendencias`)}
+                >
+                  <TrendingUp />
+                  Em Alta
+                </Button>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Button
+                  variant="link"
+                  className={`text-md font-semibold ${
+                    isSobreActive ? 'text-purple-500' : 'text-white'
+                  }`}
                   onClick={() => navigate(`/sobre`)}
                 >
                   Sobre
@@ -77,7 +104,7 @@ export default function Menu() {
         </section>
 
         {/* Botão de Menu - Mobile */}
-        <section className="md:hidden">
+        <section className="md:hidden mr-3">
           {!isMenuOpen && (
             <MenuIcon
               width={25}
@@ -104,7 +131,9 @@ export default function Menu() {
           <section className="w-full flex flex-col items-start gap-y-4">
             <Button
               variant="link"
-              className="text-white text-lg font-semibold p-0 h-auto"
+              className={`text-lg font-semibold p-0 h-auto ${
+                isNoticiasActive ? 'text-purple-500' : 'text-white'
+              }`}
               onClick={() => {
                 navigate(`/`);
                 setIsMenuOpen(false);
@@ -114,7 +143,21 @@ export default function Menu() {
             </Button>
             <Button
               variant="link"
-              className="text-white text-lg font-semibold p-0 h-auto"
+              className={`text-lg font-semibold p-0 h-auto ${
+                isEmAltaActive ? 'text-purple-500' : 'text-white'
+              }`}
+              onClick={() => {
+                navigate(`/tendencias`);
+                setIsMenuOpen(false);
+              }}
+            >
+              Em Alta
+            </Button>
+            <Button
+              variant="link"
+              className={`text-lg font-semibold p-0 h-auto ${
+                isSobreActive ? 'text-purple-500' : 'text-white'
+              }`}
               onClick={() => {
                 navigate(`/sobre`);
                 setIsMenuOpen(false);

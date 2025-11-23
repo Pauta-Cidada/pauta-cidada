@@ -420,7 +420,7 @@ export default function Dashboard() {
                     />
 
                     <div className="w-full flex justify-center">
-                      <div className="flex flex-wrap justify-center gap-4 w-full max-w-2xl">
+                      <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-4 w-full">
                         <FormField
                           control={form.control}
                           name="uf"
@@ -465,6 +465,7 @@ export default function Dashboard() {
                               onClick={handleClearFilters}
                               aria-label="Limpar filtros"
                             >
+                              <span className="md:hidden">Limpar busca</span>
                               <X />
                             </Button>
                           </TooltipTrigger>

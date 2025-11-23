@@ -4,6 +4,7 @@ import NotFound from '@/pages/NotFound';
 import { Layout } from '@/components/Layout';
 import { Navigate, Route, Routes } from 'react-router';
 import About from '@/pages/About';
+import Trending from '@/pages/Trending';
 
 export default function AppRoutes() {
   return (
@@ -33,6 +34,15 @@ export default function AppRoutes() {
         element={
           <Layout>
             <About />
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/tendencias"
+        element={
+          <Layout>
+            <Trending />
           </Layout>
         }
       />
