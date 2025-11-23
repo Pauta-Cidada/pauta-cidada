@@ -28,7 +28,10 @@ export default function Menu() {
   return (
     <>
       <nav className="bg-gray-900 z-50 flex items-center justify-between md:gap-4 md:py-3 md:px-24 sticky top-0 border-b border-gray-700">
-        <div className="ml-3">
+        <div
+          className="ml-3 cursor-pointer"
+          onClick={() => navigate('/noticias')}
+        >
           <img src={Logo} width={110} />
         </div>
 
