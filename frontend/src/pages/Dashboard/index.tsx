@@ -33,6 +33,7 @@ import type { AxiosResponse } from 'axios';
 import type { UfBadge } from '@/components/UfBadge';
 import { useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
+import { voteStorage, type VoteType } from '@/services/voteStorage';
 
 const mode: 'process' | 'consume' = 'consume';
 
@@ -142,6 +143,8 @@ export default function Dashboard() {
             nome_autor: newsDetail.author_name,
             sigla_partido: newsDetail.party,
             tipo_autor: newsDetail.news_type,
+            upvotes: newsDetail.upvotes,
+            downvotes: newsDetail.downvotes,
           };
         },
       );
@@ -156,7 +159,7 @@ export default function Dashboard() {
   }, []);
 
   const loadDataConsume = useCallback(
-    async (page: number) => {
+    async (page: number, overrideFilters?: Partial<NewsSchemaDto>) => {
       try {
         const isInitial = page === 1;
 
@@ -166,7 +169,11 @@ export default function Dashboard() {
           scroll: !isInitial,
         }));
 
-        const { keywords, uf, type } = form.getValues();
+        const currentFilters = form.getValues();
+        const { keywords, uf, type } = {
+          ...currentFilters,
+          ...overrideFilters,
+        };
 
         const response = await api.get<PaginatedNewsResponse>('/api/v1/news', {
           params: {
@@ -192,6 +199,8 @@ export default function Dashboard() {
             nome_autor: newsDetail.author_name,
             sigla_partido: newsDetail.party,
             tipo_autor: newsDetail.news_type,
+            upvotes: newsDetail.upvotes,
+            downvotes: newsDetail.downvotes,
           };
         });
 
@@ -243,17 +252,56 @@ export default function Dashboard() {
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    form.reset({
-      keywords: '',
-      uf: undefined,
-      type: undefined,
-    });
+    form.resetField('keywords');
+    form.resetField('uf');
+    form.resetField('type');
+
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
     // Force reload
     setTimeout(() => {
-      loadDataConsume(1);
+      loadDataConsume(1, {
+        keywords: '',
+        uf: undefined,
+        type: undefined,
+      });
     }, 0);
   }, [form, loadDataConsume]);
+
+  const handleVote = useCallback(async (newsId: string, voteType: VoteType) => {
+    try {
+      // Vamos atualizar a contagem dos votos primeiro na tela, para depois chamar a API
+      // Para que o usuário tenha uma melhor experiência para não esperar a API responder
+
+      // Salvar o voto do usuário localmente
+      voteStorage.setVote(newsId, voteType);
+
+      // Atualizar a contagem local da notícia
+      setNews((prevNews) =>
+        prevNews.map((newsItem) => {
+          if (newsItem.id === newsId) {
+            return {
+              ...newsItem,
+              upvotes:
+                voteType === 'upvote'
+                  ? (newsItem.upvotes || 0) + 1
+                  : newsItem.upvotes || 0,
+              downvotes:
+                voteType === 'downvote'
+                  ? (newsItem.downvotes || 0) + 1
+                  : newsItem.downvotes || 0,
+            };
+          }
+          return newsItem;
+        }),
+      );
+
+      await api.patch(`/api/v1/news/${newsId}/vote`, {
+        vote_type: voteType,
+      });
+    } catch (error) {
+      console.error('Error voting on news:', error);
+    }
+  }, []);
 
   // Restaurar estado quando voltar da página de notícia
   useEffect(() => {
@@ -379,7 +427,7 @@ export default function Dashboard() {
                     />
 
                     <div className="w-full flex justify-center">
-                      <div className="flex flex-wrap justify-center gap-4 w-full max-w-2xl">
+                      <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-4 w-full">
                         <FormField
                           control={form.control}
                           name="uf"
@@ -388,7 +436,17 @@ export default function Dashboard() {
                               <FormControl>
                                 <UfSelector
                                   value={field.value}
-                                  onChange={field.onChange}
+                                  onChange={(value) => {
+                                    field.onChange(value);
+                                    if (pagination.currentPage === 1) {
+                                      loadDataConsume(1, { uf: value });
+                                    } else {
+                                      setPagination((prev) => ({
+                                        ...prev,
+                                        currentPage: 1,
+                                      }));
+                                    }
+                                  }}
                                   placeholder="Filtrar por Estado"
                                   className="w-full h-10"
                                 />
@@ -406,7 +464,17 @@ export default function Dashboard() {
                               <FormControl>
                                 <NewsTypeSelector
                                   value={field.value}
-                                  onChange={field.onChange}
+                                  onChange={(value) => {
+                                    field.onChange(value);
+                                    if (pagination.currentPage === 1) {
+                                      loadDataConsume(1, { type: value });
+                                    } else {
+                                      setPagination((prev) => ({
+                                        ...prev,
+                                        currentPage: 1,
+                                      }));
+                                    }
+                                  }}
                                   placeholder="Filtrar por Tipo"
                                   className="w-full h-10"
                                 />
@@ -424,6 +492,7 @@ export default function Dashboard() {
                               onClick={handleClearFilters}
                               aria-label="Limpar filtros"
                             >
+                              <span className="md:hidden">Limpar busca</span>
                               <X />
                             </Button>
                           </TooltipTrigger>
@@ -453,6 +522,7 @@ export default function Dashboard() {
                     key={newsItem.number}
                     {...newsItem}
                     dashboardState={dashboardState}
+                    onVote={handleVote}
                   />
                 );
               })}

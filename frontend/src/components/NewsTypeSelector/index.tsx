@@ -68,7 +68,7 @@ export default function NewsTypeSelector({
             <CommandGroup>
               {TYPE_OPTIONS.map((type) => (
                 <CommandItem
-                  key={type.value}
+                  key={`${type.value}-${type.label}`}
                   value={type.value}
                   keywords={[type.label]}
                   onSelect={(currentValue) => {

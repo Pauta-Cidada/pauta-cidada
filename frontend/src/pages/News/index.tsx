@@ -7,7 +7,7 @@ import NewsTypeBadge from '@/components/NewsTypeBadge';
 import UfBadge, { type UfBadge as UfBadgeType } from '@/components/UfBadge';
 import AuthorTypeBadge from '@/components/AuthorTypeBadge';
 import PartyBadge from '@/components/PartyBadge';
-import { Hash, Calendar, User } from 'lucide-react';
+import { Hash, Calendar, User, ArrowBigUp, ArrowBigDown } from 'lucide-react';
 import dayjs from 'dayjs';
 import ContentPanel from './components/ContentPanel';
 import { Separator } from '@/components/ui/separator';
@@ -15,6 +15,12 @@ import { api } from '@/services/api';
 import type { NewsDetail } from '@/types/api.types';
 import type { DashboardState } from '../Dashboard';
 import { Button } from '@/components/ui/button';
+import { voteStorage, type VoteType } from '@/services/voteStorage';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip';
 
 interface NewsItemState {
   id: string;
@@ -29,6 +35,8 @@ interface NewsItemState {
   tipo_autor: string;
   pdfUrl: string;
   fullContent: string;
+  upvotes: number;
+  downvotes: number;
 }
 
 export default function News() {
@@ -65,6 +73,8 @@ export default function News() {
         tipo_autor: newsDetail.author_type,
         pdfUrl: newsDetail.pdf_storage_url,
         fullContent: newsDetail.full_content,
+        upvotes: newsDetail.upvotes,
+        downvotes: newsDetail.downvotes,
       };
 
       setNewsItem(mappedNews);
@@ -95,6 +105,36 @@ export default function News() {
       navigate('/noticias');
     }
   }, [navigate, dashboardState]);
+
+  const handleVote = useCallback(
+    async (voteType: VoteType) => {
+      if (!newsItem) return;
+
+      try {
+        // Salvar o voto do usuário localmente
+        voteStorage.setVote(newsItem.id, voteType);
+
+        // Atualizar a contagem local da notícia
+        setNewsItem((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            upvotes: voteType === 'upvote' ? prev.upvotes + 1 : prev.upvotes,
+            downvotes:
+              voteType === 'downvote' ? prev.downvotes + 1 : prev.downvotes,
+          };
+        });
+
+        // Chamar a API em background
+        await api.patch(`/api/v1/news/${newsItem.id}/vote`, {
+          vote_type: voteType,
+        });
+      } catch (error) {
+        console.error('Error voting on news:', error);
+      }
+    },
+    [newsItem],
+  );
 
   // Salvar o estado no sessionStorage quando recebê-lo
   useEffect(() => {
@@ -177,6 +217,61 @@ export default function News() {
         <NewsTypeBadge typeCode={newsItem.newsType} />
         <AuthorTypeBadge authorType={newsItem.tipo_autor!} />
         <PartyBadge party={newsItem.sigla_partido!} />
+      </div>
+
+      {/* Engagement Section */}
+      <div className="flex items-center gap-4">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() => handleVote('upvote')}
+              className={`hover:cursor-pointer flex items-center gap-1.5 transition-colors ${
+                voteStorage.getVote(newsItem.id) === 'upvote'
+                  ? 'text-green-500'
+                  : 'text-muted-foreground hover:text-green-500'
+              }`}
+              aria-label="Upvote"
+              disabled={voteStorage.hasVoted(newsItem.id)}
+            >
+              <ArrowBigUp width={24} />
+              <span className="text-base font-medium">{newsItem.upvotes}</span>
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {voteStorage.getVote(newsItem.id) === 'upvote'
+                ? 'Você já votou positivamente'
+                : 'Votar positivamente nesta notícia'}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() => handleVote('downvote')}
+              className={`hover:cursor-pointer flex items-center gap-1.5 transition-colors ${
+                voteStorage.getVote(newsItem.id) === 'downvote'
+                  ? 'text-red-500'
+                  : 'text-muted-foreground hover:text-red-500'
+              }`}
+              aria-label="Downvote"
+              disabled={voteStorage.hasVoted(newsItem.id)}
+            >
+              <ArrowBigDown width={24} />
+              <span className="text-base font-medium">
+                {newsItem.downvotes}
+              </span>
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {voteStorage.getVote(newsItem.id) === 'downvote'
+                ? 'Você já votou negativamente'
+                : 'Votar negativamente nesta notícia'}
+            </p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <Separator />
