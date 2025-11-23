@@ -80,7 +80,7 @@ export default function NewsCard({
     >
       <Card className="w-full h-full hover:cursor-pointer dark border-white/10 bg-card/50 backdrop-blur-sm select-none">
         <CardHeader>
-          <CardTitle className="group-hover:text-purple-400 transition-colors">
+          <CardTitle className="group-hover:text-purple-400 transition-colors leading-relaxed">
             {title}
           </CardTitle>
           <div className="flex flex-col gap-2 mt-2">
