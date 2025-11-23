@@ -84,22 +84,12 @@ export default function Menu() {
           {/* Chamada para contribuição open source em dispositivos médios */}
           <div className="flex gap-3 items-center">
             <a
-              href="https://github.com/Pauta-Cidada"
+              href="https://x.com/PautaCidada"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white text-md font-semibold hover:underline"
             >
               Participe da discussão
-            </a>
-            <a
-              href="https://github.com/Pauta-Cidada"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src={Github}
-                className="w-[30px] hover:opacity-80 transition-opacity"
-              />
             </a>
             <a
               href="https://x.com/PautaCidada"
@@ -110,6 +100,16 @@ export default function Menu() {
                 src={TwitterLogo}
                 className="w-[30px] hover:opacity-80 transition-opacity"
                 alt="X / Twitter"
+              />
+            </a>
+            <a
+              href="https://github.com/Pauta-Cidada"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={Github}
+                className="w-[30px] hover:opacity-80 transition-opacity"
               />
             </a>
           </div>
@@ -182,16 +182,12 @@ export default function Menu() {
           {/* Chamada para contribuição open source em dispositivos móveis */}
           <section className="w-full flex items-center gap-3">
             <a
-              href="https://github.com/Pauta-Cidada"
+              href="https://x.com/PautaCidada"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2"
+              className="text-white text-md font-semibold hover:underline"
             >
-              <img
-                src={Github}
-                className="w-[30px] hover:opacity-80 transition-opacity"
-                alt="Github"
-              />
+              Participe da discussão
             </a>
             <a
               href="https://x.com/PautaCidada"
@@ -209,9 +205,13 @@ export default function Menu() {
               href="https://github.com/Pauta-Cidada"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white text-md font-semibold hover:underline"
+              className="flex items-center gap-2"
             >
-              Participe da discussão
+              <img
+                src={Github}
+                className="w-[30px] hover:opacity-80 transition-opacity"
+                alt="Github"
+              />
             </a>
           </section>
         </div>
