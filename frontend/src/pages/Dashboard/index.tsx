@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { newsSchema, type NewsSchemaDto } from './schemas/news.schema';
 import { useCallback, useEffect, useState, useRef } from 'react';
+import { toast } from 'sonner';
 import {
   Form,
   FormControl,
@@ -153,6 +154,9 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error loading data:', error);
       setNews([]);
+      toast.error('Erro ao carregar notícias', {
+        description: 'Não foi possível carregar as notícias. Tente novamente.',
+      });
     } finally {
       setLoading((prev) => ({ ...prev, initial: false }));
     }
@@ -220,6 +224,11 @@ export default function Dashboard() {
         if (page === 1) {
           setNews([]);
         }
+
+        toast.error('Erro ao carregar notícias', {
+          description:
+            'Não foi possível carregar as notícias. Tente novamente.',
+        });
       } finally {
         setLoading((prev) => ({ ...prev, initial: false, scroll: false }));
       }
@@ -272,13 +281,8 @@ export default function Dashboard() {
 
   const handleVote = useCallback(async (newsId: string, voteType: VoteType) => {
     try {
-      // Vamos atualizar a contagem dos votos primeiro na tela, para depois chamar a API
-      // Para que o usuário tenha uma melhor experiência para não esperar a API responder
-
-      // Salvar o voto do usuário localmente
       voteStorage.setVote(newsId, voteType);
 
-      // Atualizar a contagem local da notícia
       setNews((prevNews) =>
         prevNews.map((newsItem) => {
           if (newsItem.id === newsId) {
@@ -303,6 +307,31 @@ export default function Dashboard() {
       });
     } catch (error) {
       console.error('Error voting on news:', error);
+
+      voteStorage.removeVote(newsId);
+
+      setNews((prevNews) =>
+        prevNews.map((newsItem) => {
+          if (newsItem.id === newsId) {
+            return {
+              ...newsItem,
+              upvotes:
+                voteType === 'upvote'
+                  ? (newsItem.upvotes || 0) - 1
+                  : newsItem.upvotes || 0,
+              downvotes:
+                voteType === 'downvote'
+                  ? (newsItem.downvotes || 0) - 1
+                  : newsItem.downvotes || 0,
+            };
+          }
+          return newsItem;
+        }),
+      );
+
+      toast.error('Erro ao registrar voto', {
+        description: 'Não foi possível registrar seu voto. Tente novamente.',
+      });
     }
   }, []);
 

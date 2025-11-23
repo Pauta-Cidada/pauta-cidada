@@ -61,7 +61,6 @@ export default function NewsCard({
 
     // Verificar se o usuário já votou
     if (voteStorage.hasVoted(id)) {
-      console.log('Você já votou nesta notícia');
       return;
     }
 

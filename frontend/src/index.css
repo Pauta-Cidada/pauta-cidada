@@ -118,4 +118,28 @@
   body {
     @apply bg-background text-foreground;
   }
+  [data-sonner-toast][data-type="error"] {
+    @apply !bg-red-500 !border-red-500;
+  }
+  [data-sonner-toast][data-type="error"] [data-title] {
+    @apply !text-white;
+  }
+  [data-sonner-toast][data-type="error"] [data-description] {
+    @apply !text-white/90;
+  }
+  [data-sonner-toast][data-type="error"] [data-icon] {
+    @apply !text-white;
+  }
+  [data-sonner-toast][data-type="success"] {
+    @apply !bg-green-500 !border-green-500;
+  }
+  [data-sonner-toast][data-type="success"] [data-title] {
+    @apply !text-white;
+  }
+  [data-sonner-toast][data-type="success"] [data-description] {
+    @apply !text-white/90;
+  }
+  [data-sonner-toast][data-type="success"] [data-icon] {
+    @apply !text-white;
+  }
 }
