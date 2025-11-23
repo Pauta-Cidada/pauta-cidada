@@ -2,6 +2,73 @@
 
 Sistema de geração automática de notícias a partir de proposições legislativas usando IA.
 
+## 📦 Build e Deploy
+
+### Build e Push para GitHub Container Registry
+
+**1. Autenticar no GitHub Container Registry:**
+
+```bash
+# Criar um Personal Access Token (PAT) no GitHub com permissão 'write:packages'
+# Settings > Developer settings > Personal access tokens > Tokens (classic)
+
+echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+```
+
+**2. Build da imagem:**
+
+```bash
+# Da raiz do projeto
+docker build -t ghcr.io/pauta-cidada/backend-python:latest -f backend-python/Dockerfile backend-python/
+
+# Ou com tag de versão específica
+docker build -t ghcr.io/pauta-cidada/backend-python:v1.0.0 -f backend-python/Dockerfile backend-python/
+```
+
+**3. Push para o registry:**
+
+```bash
+# Push da tag latest
+docker push ghcr.io/pauta-cidada/backend-python:latest
+
+# Push de versão específica
+docker push ghcr.io/pauta-cidada/backend-python:v1.0.0
+```
+
+**4. Tornar a imagem pública (opcional):**
+
+1. Acesse https://github.com/orgs/Pauta-Cidada/packages
+2. Selecione o package `backend-python`
+3. Package settings > Change visibility > Public
+
+### Deploy no Portainer
+
+**1. Configurar variáveis de ambiente no Portainer:**
+
+No stack do Portainer, adicione as seguintes variáveis de ambiente:
+
+```env
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_KEY=sua-anon-key
+SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key
+SUPABASE_BUCKET_NAME=proposition-pdfs
+DATABASE_URL=postgresql+asyncpg://postgres:senha@db.seu-projeto.supabase.co:6543/postgres
+OPENAI_API_KEY=sk-proj-...
+GOOGLE_CLOUD_PROJECT=seu-projeto-id
+GOOGLE_APPLICATION_CREDENTIALS_JSON='{"type":"service_account",...}'
+```
+
+**Nota:** Use a porta 6543 (Connection Pooler) do Supabase para melhor compatibilidade com Docker.
+
+**2. Deploy via docker-compose.swarm.yml:**
+
+O arquivo `docker-compose.swarm.yml` na raiz do projeto já está configurado. No Portainer:
+
+1. Stacks > Add stack
+2. Cole o conteúdo de `docker-compose.swarm.yml`
+3. Configure as variáveis de ambiente
+4. Deploy the stack
+
 ## 🏗️ Arquitetura
 
 - **FastAPI**: Framework web assíncrono
