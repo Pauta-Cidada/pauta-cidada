@@ -158,7 +158,7 @@ export default function NewsCard({
 
           <div className="flex gap-3">
             <UfBadge uf={uf} />
-            <NewsTypeBadge typeCode={newsType} />
+            <NewsTypeBadge typeCode={newsType} showLabelTypeText={false} />
           </div>
         </CardFooter>
       </Card>
