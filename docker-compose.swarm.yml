@@ -57,3 +57,6 @@ services:
 networks:
   traefik_public:
     external: true
+    driver: overlay
+    driver_opts:
+      com.docker.network.enable_ipv6: "true"
