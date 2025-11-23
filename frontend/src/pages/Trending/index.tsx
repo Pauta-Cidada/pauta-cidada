@@ -8,6 +8,7 @@ import type { NewsDetail } from '@/types/api.types';
 import type { UfBadge } from '@/components/UfBadge';
 import { voteStorage, type VoteType } from '@/services/voteStorage';
 import { TrendingUp } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Trending() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -84,6 +85,10 @@ export default function Trending() {
       if (page === 1) {
         setNews([]);
       }
+
+      toast.error('Erro ao carregar notícias', {
+        description: 'Não foi possível carregar as notícias. Tente novamente.',
+      });
     } finally {
       setLoading((prev) => ({ ...prev, initial: false, scroll: false }));
     }
@@ -135,6 +140,31 @@ export default function Trending() {
       });
     } catch (error) {
       console.error('Error voting on news:', error);
+
+      voteStorage.removeVote(newsId);
+
+      setNews((prevNews) =>
+        prevNews.map((newsItem) => {
+          if (newsItem.id === newsId) {
+            return {
+              ...newsItem,
+              upvotes:
+                voteType === 'upvote'
+                  ? (newsItem.upvotes || 0) - 1
+                  : newsItem.upvotes || 0,
+              downvotes:
+                voteType === 'downvote'
+                  ? (newsItem.downvotes || 0) - 1
+                  : newsItem.downvotes || 0,
+            };
+          }
+          return newsItem;
+        }),
+      );
+
+      toast.error('Erro ao registrar voto', {
+        description: 'Não foi possível registrar seu voto. Tente novamente.',
+      });
     }
   }, []);
 
