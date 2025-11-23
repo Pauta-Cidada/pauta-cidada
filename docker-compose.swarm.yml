@@ -11,13 +11,6 @@ services:
       placement:
         constraints:
           - node.role == manager
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
       labels:
         - traefik.enable=true
         - traefik.http.routers.pautacidada_frontend.rule=Host(`pautacidada.com.br`)
@@ -50,13 +43,6 @@ services:
       placement:
         constraints:
           - node.role == manager
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
       labels:
         - traefik.enable=true
         - traefik.http.routers.pautacidada_api.rule=Host(`api.pautacidada.com.br`)
