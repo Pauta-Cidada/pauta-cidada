@@ -252,9 +252,12 @@ export default function Dashboard() {
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    form.resetField('keywords');
-    form.resetField('uf');
-    form.resetField('type');
+    form.setValue('keywords', '', { shouldValidate: true, shouldDirty: true });
+    form.setValue('uf', undefined, { shouldValidate: true, shouldDirty: true });
+    form.setValue('type', undefined, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
 
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
     // Force reload
