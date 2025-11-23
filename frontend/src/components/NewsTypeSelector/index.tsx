@@ -23,7 +23,7 @@ import newsTypes from '@/components/NewsTypeBadge/types.json';
 const TYPE_OPTIONS = newsTypes.dados
   .filter((type) => type.sigla && type.sigla.trim() !== '')
   .map((type) => ({
-    value: type.cod,
+    value: type.sigla,
     label: `${type.sigla} - ${type.nome}`,
   }));
 
@@ -70,6 +70,7 @@ export default function NewsTypeSelector({
                 <CommandItem
                   key={type.value}
                   value={type.value}
+                  keywords={[type.label]}
                   onSelect={(currentValue) => {
                     onChange(currentValue === value ? undefined : currentValue);
                     setOpen(false);

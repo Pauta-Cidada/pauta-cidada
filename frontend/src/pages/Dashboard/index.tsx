@@ -12,10 +12,15 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import UfSelector from '@/components/UfSelector';
 import NewsTypeSelector from '@/components/NewsTypeSelector';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import Loading from '@/components/Loading';
 import { api } from '@/services/api';
 import type {
@@ -27,6 +32,7 @@ import type {
 import type { AxiosResponse } from 'axios';
 import type { UfBadge } from '@/components/UfBadge';
 import { useLocation } from 'react-router';
+import { Button } from '@/components/ui/button';
 
 const mode: 'process' | 'consume' = 'consume';
 
@@ -236,6 +242,19 @@ export default function Dashboard() {
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
   }, []);
 
+  const handleClearFilters = useCallback(() => {
+    form.reset({
+      keywords: '',
+      uf: undefined,
+      type: undefined,
+    });
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    // Force reload
+    setTimeout(() => {
+      loadDataConsume(1);
+    }, 0);
+  }, [form, loadDataConsume]);
+
   // Restaurar estado quando voltar da página de notícia
   useEffect(() => {
     // Tentar obter o estado do location.state ou do sessionStorage
@@ -396,6 +415,22 @@ export default function Dashboard() {
                             </FormItem>
                           )}
                         />
+
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="icon"
+                              onClick={handleClearFilters}
+                              aria-label="Limpar filtros"
+                            >
+                              <X />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Limpar busca</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                     </div>
                   </div>
