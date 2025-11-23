@@ -216,7 +216,11 @@ curl "http://localhost:8000/api/v1/news?page=2&limit=10&order_by=engagement_scor
 
 #### Obter detalhes de uma notícia
 ```bash
+# Por UUID da notícia
 curl "http://localhost:8000/api/v1/news/{news_id}"
+
+# Por ID da proposição (BigQuery)
+curl "http://localhost:8000/api/v1/news/proposition/2468368"
 ```
 
 #### Votar em notícia
