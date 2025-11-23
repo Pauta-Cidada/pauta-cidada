@@ -8,10 +8,12 @@ export default function TwitterEngagementRequired() {
         <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full animate-pulse" />
       </div>
 
-      <h3 className="text-xl font-semibold text-white mb-2 flex items-center gap-2">
+      <div className="flex md:flex-row flex-col items-center gap-2 text-center">
         <TrendingUp className="size-5 text-orange-400" />
-        Engajamento Necessário
-      </h3>
+        <span className="text-xl font-semibold text-white mb-2">
+          Engajamento Necessário
+        </span>
+      </div>
 
       <p className="text-muted-foreground text-center max-w-md leading-relaxed mb-6">
         Esta notícia ainda não atingiu a quantidade mínima de engajamento para
