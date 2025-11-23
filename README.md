@@ -20,9 +20,22 @@ Este é um projeto de código aberto! Se você quer contribuir, visite nosso rep
 
 ## 📋 Pré-requisitos
 
+### Para executar com Docker (recomendado):
 - [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
-- [Node.js](https://nodejs.org/) (versão 24 ou superior)
-- [npm](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
+
+### Para desenvolvimento local:
+- **Frontend:**
+  - [Node.js](https://nodejs.org/) (versão 24 ou superior)
+  - [npm](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
+
+- **Backend Python (FastAPI):**
+  - [Python](https://www.python.org/) (versão 3.13 ou superior)
+  - [uv](https://github.com/astral-sh/uv) (gerenciador de pacotes Python)
+
+### Serviços externos necessários:
+- Conta no [Supabase](https://supabase.com/) (PostgreSQL + Storage)
+- Chave da API [OpenAI](https://platform.openai.com/) (GPT-4o-mini)
+- Credenciais do [Google Cloud](https://cloud.google.com/) (BigQuery)
 
 ## 🚀 Como executar o projeto
 
