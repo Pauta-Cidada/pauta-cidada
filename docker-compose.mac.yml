@@ -8,40 +8,6 @@ networks:
         - subnet: fd00::/64
 
 services:
-  # backend:
-  #   container_name: pauta-cidada-backend-node
-  #   build:
-  #     context: ./backend-node
-  #     dockerfile: Dockerfile
-  #   env_file: .env
-  #   restart: unless-stopped
-  #   ports:
-  #     - ${PORT}:${PORT}
-  #   networks:
-  #     - pauta-cidada-network
-  #   command: npm run start:dev
-  #   depends_on:
-  #     - database
-  #   volumes:
-  #     - ./backend-node:/app
-  #     - ./backend-node/node_modules:/app/node_modules
-
-  # database:
-  #   container_name: pauta-cidada-database
-  #   image: pgvector/pgvector:pg18
-  #   restart: unless-stopped
-  #   env_file: .env
-  #   ports:
-  #     - ${DB_EXTERNAL_PORT}:5432
-  #   environment:
-  #     POSTGRES_DB: ${DB_DATABASE}
-  #     POSTGRES_USER: ${DB_USERNAME}
-  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
-  #   volumes:
-  #     - ./postgres_data:/var/lib/postgresql
-  #     - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-  #   networks:
-  #     - pauta-cidada-network
   
   frontend:
     container_name: pauta-cidada-frontend

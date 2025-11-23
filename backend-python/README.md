@@ -19,13 +19,29 @@ echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
 
 ```bash
 # Da raiz do projeto
+
+# Build local (mesma arquitetura)
 docker build -t ghcr.io/pauta-cidada/backend-python:latest -f backend-python/Dockerfile backend-python/
 
-# Ou com tag de versão específica
-docker build -t ghcr.io/pauta-cidada/backend-python:v1.0.0 -f backend-python/Dockerfile backend-python/
+# Build cross-platform (recomendado para Mac → Linux)
+# Garante compatibilidade com servidores Linux mesmo em Mac ARM/Intel
+docker buildx build \
+  --platform linux/amd64 \
+  -t ghcr.io/pauta-cidada/backend-python:latest \
+  -f backend-python/Dockerfile backend-python/ \
+  --push
+
+# Com tag de versão específica
+docker buildx build \
+  --platform linux/amd64 \
+  -t ghcr.io/pauta-cidada/backend-python:v1.0.0 \
+  -f backend-python/Dockerfile backend-python/ \
+  --push
 ```
 
-**3. Push para o registry:**
+**Nota:** Use `docker buildx build --platform linux/amd64` ao fazer build em Mac (ARM ou Intel) para garantir compatibilidade com servidores Linux x86_64.
+
+**3. Push para o registry (se não usou --push no buildx):**
 
 ```bash
 # Push da tag latest
