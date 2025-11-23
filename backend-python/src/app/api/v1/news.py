@@ -188,6 +188,31 @@ async def list_news(
     )
 
 
+@router.get("/proposition/{proposition_id}", response_model=NewsResponse)
+async def get_news_by_proposition(
+    proposition_id: int,
+    news_repo: NewsRepository = Depends(get_news_repo)
+):
+    """
+    Get news by proposition ID.
+    
+    Args:
+        proposition_id: ID of the proposition (from BigQuery)
+        
+    Returns:
+        Full news details
+    """
+    news = await news_repo.get_by_proposition_id(proposition_id)
+    
+    if not news:
+        raise HTTPException(
+            status_code=404, 
+            detail=f"News not found for proposition {proposition_id}"
+        )
+    
+    return NewsResponse.model_validate(news)
+
+
 @router.get("/{news_id}", response_model=NewsResponse)
 async def get_news_detail(
     news_id: UUID,
