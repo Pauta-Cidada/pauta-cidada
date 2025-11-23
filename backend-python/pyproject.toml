@@ -43,6 +43,8 @@ dependencies = [
     "python-slugify>=8.0.0",
     "python-multipart>=0.0.6",
     "uvicorn>=0.30.0",
+    # Twitter/X Integration
+    "tweepy>=4.14.0",
 ]
 
 [dependency-groups]
