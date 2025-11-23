@@ -159,7 +159,7 @@ export default function Dashboard() {
   }, []);
 
   const loadDataConsume = useCallback(
-    async (page: number) => {
+    async (page: number, overrideFilters?: Partial<NewsSchemaDto>) => {
       try {
         const isInitial = page === 1;
 
@@ -169,7 +169,11 @@ export default function Dashboard() {
           scroll: !isInitial,
         }));
 
-        const { keywords, uf, type } = form.getValues();
+        const currentFilters = form.getValues();
+        const { keywords, uf, type } = {
+          ...currentFilters,
+          ...overrideFilters,
+        };
 
         const response = await api.get<PaginatedNewsResponse>('/api/v1/news', {
           params: {
@@ -248,15 +252,18 @@ export default function Dashboard() {
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    form.reset({
-      keywords: '',
-      uf: undefined,
-      type: undefined,
-    });
+    form.resetField('keywords');
+    form.resetField('uf');
+    form.resetField('type');
+
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
     // Force reload
     setTimeout(() => {
-      loadDataConsume(1);
+      loadDataConsume(1, {
+        keywords: '',
+        uf: undefined,
+        type: undefined,
+      });
     }, 0);
   }, [form, loadDataConsume]);
 
@@ -429,7 +436,17 @@ export default function Dashboard() {
                               <FormControl>
                                 <UfSelector
                                   value={field.value}
-                                  onChange={field.onChange}
+                                  onChange={(value) => {
+                                    field.onChange(value);
+                                    if (pagination.currentPage === 1) {
+                                      loadDataConsume(1, { uf: value });
+                                    } else {
+                                      setPagination((prev) => ({
+                                        ...prev,
+                                        currentPage: 1,
+                                      }));
+                                    }
+                                  }}
                                   placeholder="Filtrar por Estado"
                                   className="w-full h-10"
                                 />
@@ -447,7 +464,17 @@ export default function Dashboard() {
                               <FormControl>
                                 <NewsTypeSelector
                                   value={field.value}
-                                  onChange={field.onChange}
+                                  onChange={(value) => {
+                                    field.onChange(value);
+                                    if (pagination.currentPage === 1) {
+                                      loadDataConsume(1, { type: value });
+                                    } else {
+                                      setPagination((prev) => ({
+                                        ...prev,
+                                        currentPage: 1,
+                                      }));
+                                    }
+                                  }}
                                   placeholder="Filtrar por Tipo"
                                   className="w-full h-10"
                                 />
