@@ -49,6 +49,7 @@ class News(Base):
     # Social media publication
     published_to_social = Column(Boolean, default=False, nullable=False)
     social_publish_date = Column(DateTime, nullable=True)
+    twitter_post_url = Column(String(500), nullable=True)
     
     # Additional metadata (tags, categories, AI metrics) - renamed from 'metadata' (reserved word)
     extra_metadata = Column(JSON, nullable=True)
